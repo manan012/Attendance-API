@@ -16,8 +16,8 @@ app.use(bodyParser.urlencoded({
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Acess-Control-Allow-Methods', '*');
-    res.setHeader('Aceess-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 })
 
@@ -39,4 +39,4 @@ mongoose.connect(
 .then(console.log('hello'))
 .catch(err => console.log(err))
 
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3005);
