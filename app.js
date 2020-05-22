@@ -39,4 +39,4 @@ mongoose.connect(
 .then(console.log('hello'))
 .catch(err => console.log(err))
 
-app.listen(process.env.PORT || 3005);
+app.listen(3000);

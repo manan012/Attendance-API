@@ -36,6 +36,10 @@ const userSchema = mongoose.Schema({
     },
     onLeave: {
         type: String,
+    },
+    superAdmin: {
+        type: String,
+        
     }
 
 }, {timestamps:true});
