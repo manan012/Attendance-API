@@ -5,7 +5,10 @@ module.exports= (req,res,next)=>{
     if(!authHeader){
         const error = new Error('Not authenticated');
         error.statusCode = 401;
-        throw error;
+        return res.status(401).json({
+            sucess: 'false',
+            message: 'Not authenticated'
+        })
     }
     const token=req.get('Authorization').split(' ')[1];
     let decodedtoken;
@@ -13,12 +16,18 @@ module.exports= (req,res,next)=>{
         decodedtoken=jwt.verify(token,'secretkey');
     }catch(err){
         err.statusCode = 500;
-        throw err;
+        return res.status(500).json({
+            sucess: 'false',
+            message: 'Some Error Occurred'
+        })
     }
     if(!decodedtoken) {
         const error = new Error('Not Authenticated');
         error.statusCode = 401;
-        throw error;
+        return res.status(401).json({
+            sucess: 'false',
+            message: 'Not authenticated'
+        })
     }
     //console.log(decodedtoken);
     req.userId = decodedtoken.userId;

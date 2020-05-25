@@ -11,7 +11,8 @@ const attendanceSchema = mongoose.Schema({
     },
     onLeave: {
         type: Boolean,
-        required: true
+        required: true,
+        default:false
     },
     date: {
         type: String,
@@ -23,6 +24,6 @@ const attendanceSchema = mongoose.Schema({
         ref: User
        
     },
-},{timestamps: true});
+});
 
 module.exports = mongoose.model('Attendance', attendanceSchema);

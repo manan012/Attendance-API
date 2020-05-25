@@ -56,57 +56,66 @@ const dot = require('dotenv').config();
 // }
 
 exports.getAttendanceById = (req, res, next) => {
+    const adminId = req.userId;
     const id = req.params.userId;
-    let today1 = new Date(new Date().toDateString());
+    let today1 = new Date().toDateString();
+    const lte = (new Date('2020-05-20').toDateString());
+    //console.log("Less than", lte);
+    //console.log("today1: ", today1);
+    Users.findById(adminId)
+        .then(success => {
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User Not found'
+                })
+            } else {
+                if (success.role == 'admin') {
+                    //console.log('yes', success.role);
+                    Attendance.find({ _user: id })
 
-    Attendance.find({_user:id})
-        
-        .then(result => {
-            return res.status(200).json({
-                message: "success",
-                user: result
-            })
+                        .then(result => {
 
+                            return res.status(200).json({
+                                message: "success",
+                                AttendanceRecord: result
+                            })
+
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            return res.status(500).json({
+                                success: "false",
+                                message: "Some Error occurred"
+                            })
+                        })
+                } else {
+                    return res.status(401).json({
+                        success: "false",
+                        message: "Unauthorized Access"
+                    })
+                }
+
+               
+            }
         })
         .catch(err => {
-            console.log(err)
             return res.status(500).json({
-                success:"false",
-                message:"Some Error occurred"
+                success: 'false',
+                message: 'Some Error Occurred'
             })
         })
-        //     if(err) {
-        //         console.log(err)
-        //         res.json({
-        //             error: err,
-        //             message:"some error"
-        //         })
-        //     } else {
-        //         res.json({
-        //             message:"success",
-        //             user: user
-        //         })
-        //     }
-        // }
 
 
-    // .then(repo => {
-    //     console.log(repo);
 
-    //     return res.status(200).json({
-    //         message:"Success",
-    //         response: repo
-    //     })
-    // })
-    // .catch(err => console.log(err));
 }
 
 
 
 exports.markAttendance = (req, res, next) => {
     const id = req.userId;
-    let today1 = new Date(new Date().toDateString());
-    
+    let today1 = new Date().toDateString();
+
 
     Users.findById(id)
         .exec()
@@ -130,7 +139,7 @@ exports.markAttendance = (req, res, next) => {
                     }
 
                 })
-                Attendance.findOne({_user:id, date: today1 })
+                Attendance.findOne({ _user: id, date: today1 })
                     .exec()
                     .then(success => {
 
@@ -140,8 +149,7 @@ exports.markAttendance = (req, res, next) => {
 
                             attend._id = new mongoose.Types.ObjectId(),
                                 attend.present = true,
-                                attend.onLeave = false,
-                                attend.date = new Date(new Date().toDateString()),
+                                attend.date = new Date().toDateString(),
                                 attend._user = id;
 
                             attend.save()
@@ -157,10 +165,10 @@ exports.markAttendance = (req, res, next) => {
                                 })
                         } else {
                             //console.log("success ", success);
-                           return res.status(403).json({
-                               success:"false",
-                               message:"Attendance already marked"
-                           })
+                            return res.status(403).json({
+                                success: "false",
+                                message: "Attendance already marked"
+                            })
                         }
 
                     })
