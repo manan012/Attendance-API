@@ -61,33 +61,60 @@ exports.getAttendanceById = (req, res, next) => {
     let today1 = new Date().toDateString();
     const lte = (new Date('2020-05-20').toDateString());
     //console.log("Less than", lte);
+
+
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
                 return res.status(404).json({
                     success: false,
-                    message: 'User Not found'
+                    message: 'Admin Not found'
                 })
             } else {
                 if (success.role == 'admin') {
                     //console.log('yes', success.role);
-                    Attendance.find({ _user: id })
+                    Users.findById(id)
+                        .then(myUser => {
+                            if (myUser == null || myUser.length < 1) {
+                                return res.status(404).json({
+                                    success: 'false',
+                                    message: 'User Not found'
+                                })
+                            }
+                            else {
+                                Attendance.find({ _user: id })
 
-                        .then(result => {
+                                    .then(result => {
+                                        if (result == null || result.length < 1) {
+                                            return res.status(404).json({
+                                                success: false,
+                                                message: 'Attendance Record of User Not found'
+                                            })
+                                        } else {
+                                            return res.status(200).json({
+                                                message: "success",
+                                                AttendanceRecord: result
+                                            })
 
-                            return res.status(200).json({
-                                message: "success",
-                                AttendanceRecord: result
-                            })
-
+                                        }
+                                    })
+                                    .catch(err => {
+                                        console.log(err)
+                                        return res.status(500).json({
+                                            success: "false",
+                                            message: "Some Error occurred"
+                                        })
+                                    })
+                            }
                         })
                         .catch(err => {
-                            console.log(err)
                             return res.status(500).json({
-                                success: "false",
-                                message: "Some Error occurred"
+                                success:'false',
+                                message:'Error Occurred. Invalid User'
                             })
+
                         })
+
                 } else {
                     return res.status(401).json({
                         success: "false",
@@ -95,7 +122,7 @@ exports.getAttendanceById = (req, res, next) => {
                     })
                 }
 
-               
+
             }
         })
         .catch(err => {
