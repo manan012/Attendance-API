@@ -35,11 +35,7 @@ const userSchema = mongoose.Schema({
         required: true,
     },
     onLeave: {
-        type: String,
-    },
-    superAdmin: {
-        type: String,
-        
+        type: Boolean,
     }
 
 }, {timestamps:true});

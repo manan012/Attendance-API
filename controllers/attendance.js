@@ -55,99 +55,112 @@ const dot = require('dotenv').config();
 
 // }
 
-// exports.getAttendance = (req,res,next) => {
-//     const id = req.userId;
-//     Users.findById(id)
-//     .exec()
-//         .then(result => {
-//             if (result.length < 1) {
-//                 return res.status(404).json({
-//                     success:"false",
-//                     message: "User not exists",
+exports.getAttendanceById = (req, res, next) => {
+    const id = req.params.userId;
+    let today1 = new Date(new Date().toDateString());
 
-//                 })
+    Attendance.find({_user:id})
+        
+        .then(result => {
+            return res.status(200).json({
+                message: "success",
+                user: result
+            })
 
-//             }
-//             else {
-//                 result
-//             }
-//     })
-//     .catch()
-// }
+        })
+        .catch(err => {
+            console.log(err)
+            return res.status(500).json({
+                success:"false",
+                message:"Some Error occurred"
+            })
+        })
+        //     if(err) {
+        //         console.log(err)
+        //         res.json({
+        //             error: err,
+        //             message:"some error"
+        //         })
+        //     } else {
+        //         res.json({
+        //             message:"success",
+        //             user: user
+        //         })
+        //     }
+        // }
+
+
+    // .then(repo => {
+    //     console.log(repo);
+
+    //     return res.status(200).json({
+    //         message:"Success",
+    //         response: repo
+    //     })
+    // })
+    // .catch(err => console.log(err));
+}
 
 
 
 exports.markAttendance = (req, res, next) => {
     const id = req.userId;
+    let today1 = new Date(new Date().toDateString());
+    
 
     Users.findById(id)
         .exec()
         .then(result => {
-            if (result.length < 1) {
+            if (result == null || result.length < 1) {
                 return res.status(404).json({
-                    success:"false",
+                    success: "false",
                     message: "User not exists",
 
                 })
 
             }
             else {
-                Users.findByIdAndUpdate({_id:id},{onLeave:"false"},function (err1, success1) {
-                    if(err1) {
-                        console.log("error ");
+                Users.findByIdAndUpdate({ _id: id }, { onLeave: false }, function (err1, success1) {
+                    if (err1) {
+                        console.log("error in user");
                     }
                     else {
-                        console.log("Success");
-                        
+                        console.log("Success in user");
+
                     }
-                    
+
                 })
-                const today1 = new Date(new Date().toDateString());
-                Attendance.findOneAndUpdate({ date: today1 })
+                Attendance.findOne({_user:id, date: today1 })
                     .exec()
                     .then(success => {
-                        if (success == null) {
+
+
+                        if (success == null || success.length < 1) {
                             const attend = new Attendance();
 
                             attend._id = new mongoose.Types.ObjectId(),
-                                attend.present.push("true"),
-                                attend.onLeave.push("false"),
+                                attend.present = true,
+                                attend.onLeave = false,
                                 attend.date = new Date(new Date().toDateString()),
-                                attend._user.push(result);
+                                attend._user = id;
 
                             attend.save()
                                 .then(result => {
                                     var string = JSON.stringify(attend._user);
                                     var objectValue = JSON.parse(string);
                                     return res.status(200).json({
-                                        success:"true",
+                                        success: "true",
                                         message: "Attendance marked successfully",
-                                        
+
                                     })
 
                                 })
                         } else {
-                            console.log("success ", success);
-                            Attendance.update({
-                                date: today1
-                            },
-                                { $push: { present: "true", onLeave: "false", _user: result } },
-                                function (error, succ) {
-                                    if (error) {
-                                        return res.status(500).json({
-                                            success:"false",
-                                            message:"Some error occurred"
-                                        })
-                                        //console.log("noo  ", error);
-
-                                    }
-                                    else {
-                                        return res.status(200).json({
-                                            success:"true",
-                                            message:"Attendance marked successfully"
-                                        })
-                                    }
-                                })
+                            //console.log("success ", success);
+                           return res.status(403).json({
+                               success:"false",
+                               message:"Attendance already marked"
+                           })
                         }
 
                     })
@@ -159,8 +172,8 @@ exports.markAttendance = (req, res, next) => {
         .catch(err => {
             console.log(err);
             return res.status(500).json({
-                success:"false",
-                message:"Some error occurred"
+                success: "false",
+                message: "Some error occurred"
             })
         });
 }
