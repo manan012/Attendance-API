@@ -61,7 +61,6 @@ exports.getAttendanceById = (req, res, next) => {
     let today1 = new Date().toDateString();
     const lte = (new Date('2020-05-20').toDateString());
     //console.log("Less than", lte);
-    //console.log("today1: ", today1);
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
