@@ -10,6 +10,9 @@ router.post('/register',sign.register);
 router.post('/login',sign.login);
 router.post('/attendance',userAuth, attendance.markAttendance);
 
+router.get('/attendance/all',userAuth, attendance.getAllAttendance);
 router.get('/attendance/:userId', userAuth, attendance.getAttendanceById);
+
+
 
 module.exports = router;

@@ -5,11 +5,10 @@ const Attendance = require('../models/attendance');
 const url = require('url');
 
 
-exports.getAttendanceById = (req, res, next) => {
+exports.getAllAttendance = (req, res, next) => {
     const adminId = req.userId;
-    const id = req.params.userId;
 
-    const qwe = url.parse(req.url,true).query;
+    const qwe = url.parse(req.url, true).query;
     var df = qwe.dateFrom;
     var dt = qwe.dateTo;
     //console.log(df);
@@ -24,201 +23,374 @@ exports.getAttendanceById = (req, res, next) => {
     //console.log(arr2[0], arr2[1], arr2[2]);
 
     var dateFrom = new Date();
-    dateFrom.setFullYear(arr1[0], arr1[1]-1, arr1[2]);
+    dateFrom.setFullYear(arr1[0], arr1[1] - 1, arr1[2]);
     dateFrom.setUTCHours(0);
     dateFrom.setUTCMinutes(0);
     dateFrom.setUTCSeconds(0);
     dateFrom.setUTCMilliseconds(0);
-    console.log('date from:', dateFrom);
+    //console.log('date from:', dateFrom);
 
     var dateTo = new Date();
-    dateTo.setFullYear(arr2[0], arr2[1]-1, arr2[2]);
+    dateTo.setFullYear(arr2[0], arr2[1] - 1, arr2[2]);
     dateTo.setUTCHours(0);
     dateTo.setUTCMinutes(0);
     dateTo.setUTCSeconds(0);
     dateTo.setUTCMilliseconds(0);
-    console.log('date To:', dateTo);
+    //console.log('date To:', dateTo);
 
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
                 return res.status(404).json({
-                    success: false,
+                    success: "false",
                     message: 'Admin Not found'
                 })
             } else {
                 if (success.role == 'admin') {
-                    //console.log('yes', success.role);
-                    Users.findById(id)
-                        .then(myUser => {
-                            if (myUser == null || myUser.length < 1) {
+
+                    Attendance.find({ date: { $gte: dateFrom, $lte: dateTo } })
+                        .then(result => {
+                            if (result == null || result.length < 1) {
                                 return res.status(404).json({
                                     success: 'false',
-                                    message: 'User Not found'
+                                    message: 'No attendance record found'
+                                })
+                            } else {
+                                return res.status(200).json({
+                                    success: 'true',
+                                    AttendenceRecord: result
                                 })
                             }
-                            else {
-                                Attendance.find({ _user: id, date: { $gte: dateFrom , $lte: dateTo} })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            return res.status(500).json({
+                                success: 'false',
+                                message: 'Some error occurred'
+                            })
+                        })
 
-                                    .then(result => {
-                                        if (result == null || result.length < 1) {
-                                            return res.status(404).json({
-                                                success: false,
-                                                message: 'Attendance Record of User Not found'
-                                            })
-                                        } else {
-                                            return res.status(200).json({
-                                                message: "success",
-                                                AttendanceRecord: result
-                                            })
+                } else {
+                    return res.status(401).json({
+                        success:'false',
+                        message:'unauthorized Access'
+                    })
+                }
+            }
+        })
+        .catch(err => {
+            return res.status(500).json({
+                success:'false',
+                message:'Some error occurred'
+            })
+        })
+    }
 
-                                        }
-                                    })
-                                    .catch(err => {
-                                        console.log(err)
-                                        return res.status(500).json({
-                                            success: "false",
-                                            message: "Some Error occurred"
+
+                // exports.getAllAttendance = (req, res, next) => {
+                //     const adminId = req.userId;
+
+                //     Users.findById(adminId)
+                //     .exec()
+                //         .then(success => {
+                //             if (success == null || success.length < 1) {
+                //                 return res.status(404).json({
+                //                     success: "false",
+                //                     message: "Admin Not found"
+                //                 })
+                //             } else {
+                //                 if (success.role == 'admin') {
+                //                     var attend = [];
+                //                     Users.find()
+                //                         .exec()
+                //                         .then(result => {
+                //                             var len = result.length;
+                //                             var objId = [];
+
+                //                             let i;
+                //                             for (i = 0; i < len; i = i + 1) {
+                //                                 objId[i] = result[i]._id;
+                //                             }
+                //                             return objId;
+                //                         })
+                //                         .then((result) => {
+                //                             console.log(result);
+                //                             var len = result.length;
+                //                             var attend = [];
+                //                             let i;
+                //                             let j =0;
+                //                             for(i = 0; i<len;i++) {                          
+                //                                 Attendance.find({ _user: result[i] })
+                //                                 .exec()
+                //                                     .then(success => {
+
+                //                                         if (success == null || success.length < 1) {
+                //                                             var notFound = {
+                //                                                 user: result[i],
+                //                                                 message: 'not found'
+                //                                             }
+                //                                             attend.push(notFound);
+                //                                             //console.log(attend);
+
+
+                //                                         } else {
+                //                                             attend.push(JSON.stringify(success));
+                //                                             console.log(attend);
+                //                                         }
+                //                                     })
+
+                //                                     .catch(err => console.log(err)
+                //                                     )
+                //                                 }
+                //                                     console.log(attend);
+
+
+
+                //                         })
+                //                         .catch(err => {
+                //                             console.log(err)
+                //                             return res.status(500).json({
+                //                                 success: "false",
+                //                                 message: "Some Error occurred"
+                //                             })
+                //                         });
+
+
+                //                 } else {
+                //                     return res.status(401).json({
+                //                         success: "false",
+                //                         message: "Unauthorized Access"
+                //                     })
+                //                 }
+
+
+                //             }
+                //         })
+                //         .catch(err => {
+                //             return res.status(500).json({
+                //                 success: 'false',
+                //                 message: 'Some Error Occurred'
+                //             })
+                //         })
+
+
+
+                // }
+
+
+
+                exports.getAttendanceById = (req, res, next) => {
+                    const adminId = req.userId;
+                    const id = req.params.userId;
+
+                    const qwe = url.parse(req.url, true).query;
+                    var df = qwe.dateFrom;
+                    var dt = qwe.dateTo;
+                    //console.log(df);
+                    //console.log(new Date(2020, 7, 14));
+                    //console.log("Less than", lte);
+                    var arr1 = [];
+                    var arr2 = [];
+
+                    arr1 = df.split('-');
+                    arr2 = dt.split('-');
+                    //console.log(arr1[0], arr1[1], arr1[2]);
+                    //console.log(arr2[0], arr2[1], arr2[2]);
+
+                    var dateFrom = new Date();
+                    dateFrom.setFullYear(arr1[0], arr1[1] - 1, arr1[2]);
+                    dateFrom.setUTCHours(0);
+                    dateFrom.setUTCMinutes(0);
+                    dateFrom.setUTCSeconds(0);
+                    dateFrom.setUTCMilliseconds(0);
+                    //console.log('date from:', dateFrom);
+
+                    var dateTo = new Date();
+                    dateTo.setFullYear(arr2[0], arr2[1] - 1, arr2[2]);
+                    dateTo.setUTCHours(0);
+                    dateTo.setUTCMinutes(0);
+                    dateTo.setUTCSeconds(0);
+                    dateTo.setUTCMilliseconds(0);
+                    //console.log('date To:', dateTo);
+
+                    Users.findById(adminId)
+                        .then(success => {
+                            if (success == null || success.length < 1) {
+                                return res.status(404).json({
+                                    success: "false",
+                                    message: 'Admin Not found'
+                                })
+                            } else {
+                                if (success.role == 'admin') {
+                                    //console.log('yes', success.role);
+                                    Users.findById(id)
+                                        .then(myUser => {
+                                            if (myUser == null || myUser.length < 1) {
+                                                return res.status(404).json({
+                                                    success: 'false',
+                                                    message: 'User Not found'
+                                                })
+                                            }
+                                            else {
+                                                Attendance.find({ _user: id, date: { $gte: dateFrom, $lte: dateTo } })
+
+                                                    .then(result => {
+                                                        if (result == null || result.length < 1) {
+                                                            return res.status(404).json({
+                                                                success: "false",
+                                                                message: 'Attendance Record of User Not found'
+                                                            })
+                                                        } else {
+                                                            return res.status(200).json({
+                                                                message: "success",
+                                                                AttendanceRecord: result
+                                                            })
+
+                                                        }
+                                                    })
+                                                    .catch(err => {
+                                                        console.log(err)
+                                                        return res.status(500).json({
+                                                            success: "false",
+                                                            message: "Some Error occurred"
+                                                        })
+                                                    })
+                                            }
                                         })
+                                        .catch(err => {
+                                            return res.status(500).json({
+                                                success: 'false',
+                                                message: 'Error Occurred. Invalid User'
+                                            })
+
+                                        })
+
+                                } else {
+                                    return res.status(401).json({
+                                        success: "false",
+                                        message: "Unauthorized Access"
                                     })
+                                }
+
+
                             }
                         })
                         .catch(err => {
                             return res.status(500).json({
                                 success: 'false',
-                                message: 'Error Occurred. Invalid User'
+                                message: 'Some Error Occurred'
                             })
-
                         })
 
-                } else {
-                    return res.status(401).json({
-                        success: "false",
-                        message: "Unauthorized Access"
-                    })
                 }
 
 
-            }
-        })
-        .catch(err => {
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some Error Occurred'
-            })
-        })
-
-
-
-}
 
 
 
 
+                exports.markAttendance = (req, res, next) => {
+                    const id = req.userId;
+                    var d = new Date();
+                    var a = d.getFullYear();
+                    var b = d.getMonth();
+                    var c = d.getDate();
+                    //console.log(a, b, c);
+                    d.set
+                    d.setFullYear(a, b, c);
+                    d.setUTCHours(0);
+                    d.setUTCMinutes(0);
+                    d.setUTCSeconds(0);
+                    d.setUTCMilliseconds(0);
+                    //console.log('find date:', d);
+                    var qw = d.getTime();
+                    var d1 = new Date(qw);
+                    //console.log('find mS', qw);
+
+                    let today1 = String(new Date(new Date().toDateString()));
+                    //console.log('today1: ', today1);
+
+                    var x1 = new Date();
+                    var x2 = x1.getTime();
+                    var x3 = new Date(x2);
+                    //var x2 = x1.getMilliseconds();
+                    //console.log('date', x3);
+                    //console.log(x3.toString("YYYY MMM DD"));
+
+                    //console.log('date2', x2);
+                    Users.findById(id)
+                        .exec()
+                        .then(result => {
+                            if (result == null || result.length < 1) {
+                                return res.status(404).json({
+                                    success: "false",
+                                    message: "User not exists",
+
+                                })
+
+                            }
+                            else {
+                                // Users.findByIdAndUpdate({ _id: id }, { onLeave: false }, function (err1, success1) {
+                                //     if (err1) {
+                                //         console.log("error in user");
+                                //     }
+                                //     else {
+                                //         console.log("Success in user");
+
+                                //     }
+
+                                // })
+                                Attendance.findOne({ _user: id, date: { $gte: qw } })
+                                    .exec()
+                                    .then(success => {
 
 
-exports.markAttendance = (req, res, next) => {
-    const id = req.userId;
-    var d = new Date();
-    var a = d.getFullYear();
-    var b = d.getMonth();
-    var c = d.getDate();
-    console.log(a, b, c);
-    d.set
-    d.setFullYear(a, b, c);
-    d.setUTCHours(0);
-    d.setUTCMinutes(0);
-    d.setUTCSeconds(0);
-    d.setUTCMilliseconds(0);
-    console.log('find date:', d);
-    var qw = d.getTime();
-    var d1 = new Date(qw);
-    console.log('find mS', qw);
+                                        if (success == null || success.length < 1) {
+                                            const attend = new Attendance();
 
-    let today1 = String(new Date(new Date().toDateString()));
-    //console.log('today1: ', today1);
+                                            attend._id = new mongoose.Types.ObjectId(),
+                                                attend.present = true,
+                                                attend.date = x2,
+                                                attend._user = id;
 
-    var x1 = new Date();
-    var x2 = x1.getTime();
-    var x3 = new Date(x2);
-    //var x2 = x1.getMilliseconds();
-    console.log('date', x3);
-    console.log(x3.toString("YYYY MMM DD"));
+                                            attend.save()
+                                                .then(result => {
+                                                    var string = JSON.stringify(attend._user);
+                                                    var objectValue = JSON.parse(string);
+                                                    return res.status(200).json({
+                                                        success: "true",
+                                                        message: "Attendance marked successfully",
 
-    //console.log('date2', x2);
-    Users.findById(id)
-        .exec()
-        .then(result => {
-            if (result == null || result.length < 1) {
-                return res.status(404).json({
-                    success: "false",
-                    message: "User not exists",
+                                                    })
 
-                })
+                                                })
+                                                .catch(err => {
+                                                    console.log(err);
 
-            }
-            else {
-                // Users.findByIdAndUpdate({ _id: id }, { onLeave: false }, function (err1, success1) {
-                //     if (err1) {
-                //         console.log("error in user");
-                //     }
-                //     else {
-                //         console.log("Success in user");
-
-                //     }
-
-                // })
-                Attendance.findOne({ _user: id, date: { $gte: qw } })
-                    .exec()
-                    .then(success => {
-
-
-                        if (success == null || success.length < 1) {
-                            const attend = new Attendance();
-
-                            attend._id = new mongoose.Types.ObjectId(),
-                                attend.present = true,
-                                attend.date = x2,
-                                attend._user = id;
-
-                            attend.save()
-                                .then(result => {
-                                    var string = JSON.stringify(attend._user);
-                                    var objectValue = JSON.parse(string);
-                                    return res.status(200).json({
-                                        success: "true",
-                                        message: "Attendance marked successfully",
+                                                    return res.status(500).json({
+                                                        success: 'false',
+                                                        message: 'Some error Occurred'
+                                                    })
+                                                })
+                                        } else {
+                                            //console.log("success ", success);
+                                            return res.status(403).json({
+                                                success: "false",
+                                                message: "Attendance already marked"
+                                            })
+                                        }
 
                                     })
 
-                                })
-                                .catch(err => {
-                                    console.log(err);
 
-                                    return res.status(500).json({
-                                        success: 'false',
-                                        message: 'Some error Occurred'
-                                    })
-                                })
-                        } else {
-                            //console.log("success ", success);
-                            return res.status(403).json({
+
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            return res.status(500).json({
                                 success: "false",
-                                message: "Attendance already marked"
+                                message: "Some error occurred"
                             })
-                        }
-
-                    })
-
-
-
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                success: "false",
-                message: "Some error occurred"
-            })
-        });
-}
+                        });
+                }
