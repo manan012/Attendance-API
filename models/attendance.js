@@ -12,17 +12,17 @@ const attendanceSchema = mongoose.Schema({
     onLeave: {
         type: Boolean,
         required: true,
-        default:false
+        default: false
     },
     date: {
         type: Number,
         required: true,
     },
     _user: {
-      
+
         type: mongoose.Schema.Types.ObjectId,
         ref: User
-       
+
     },
 });
 
