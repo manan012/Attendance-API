@@ -141,7 +141,6 @@ exports.editKanban = (req, res, next) => {
         })
 }
 
-
 exports.deleteKanban = (req, res, next) => {
 
     const adminId = req.userId;
