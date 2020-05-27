@@ -26,8 +26,8 @@ exports.createProject = (req, res, next) => {
                     project._modules = req.body.module;
                 }
 
-                if (req.body.members != null) {
-                    task._members = req.body.members;
+                if (req.body.member != null) {
+                    task._members = req.body.member;
                 }
 
                 project.save()
@@ -73,7 +73,7 @@ exports.editProject = (req, res, next) => {
                 })
             } else {
 
-                Projects.findById(projectId)
+                Projects.find({_id:projectId, createdBy:userId})
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
@@ -138,7 +138,7 @@ exports.deleteProject = (req, res, next) => {
                 })
             } else {
 
-                Projects.findById(projectId)
+                Projects.find({_id:projectId, createdBy: userId})
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
