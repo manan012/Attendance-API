@@ -7,6 +7,7 @@ const task = require('../controllers/task');
 const attendance = require('../controllers/attendance');
 const moduler = require('../controllers/module');
 const project = require('../controllers/projects');
+const kanban = require('../controllers/kanban');
 const userAuth = require('../middleware/userAuth');
 
 router.post('/register', sign.register);
@@ -32,6 +33,11 @@ router.put('/project/:projectId', userAuth, project.editProject);
 router.delete('/project/:projectId', userAuth, project.deleteProject);
 router.get('/project/all', userAuth, project.getAllProject);
 router.get('/project/:projectId', userAuth, project.getProject);
+
+router.post('/board', userAuth, kanban.createKanban);
+router.put('/board/:boardId', userAuth, kanban.editKanban);
+router.delete('/board/:boardId', userAuth, kanban.deleteKanban);
+router.get('/board', userAuth, kanban.getKanban);
 
 
 

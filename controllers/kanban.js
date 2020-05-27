@@ -2,9 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Users = require('../models/user');
 const Tasks = require('../models/task');
+const Kanbans = require('../models/kanban');
 const url = require('url');
 
-exports.generateTask = (req, res, next) => {
+exports.createKanban = (req, res, next) => {
     // const userId = req.params.userId;
     const adminId = req.userId;
 
@@ -17,26 +18,24 @@ exports.generateTask = (req, res, next) => {
                 })
             } else {
                 if (success.role == 'admin') {
-                    const task = new Tasks();
-                    task._id = new mongoose.Types.ObjectId(),
-                        task.title = req.body.title;
-                    task.description = req.body.description;
+                    const kanban = new Kanbans();
+                    kanban._id = new mongoose.Types.ObjectId();
+                    kanban.name = req.body.name;
+                    if (req.body.task != null) {
+                        kanban._task = req.body.task;
+                    }
+
                     if (req.body.user != null) {
-                        task._user = req.body.user;
+                        kanban._user = req.body.user;
                     }
 
-                    if (req.body.module != null) {
-                        task._module = req.body.module;
-                    }
-
-
-                    task.save()
+                    kanban.save()
                         .then(result => {
                             console.log(result);
                             return res.status(201).json({
                                 success: "true",
-                                message: "Task successfully created",
-                                taskId: result._id
+                                message: "Kanban board successfully created",
+                                kanbanBoardId: result._id
                             })
                         })
                         .catch(err => {
@@ -66,11 +65,10 @@ exports.generateTask = (req, res, next) => {
 
 }
 
-
-exports.editTask = (req, res, next) => {
+exports.editKanban = (req, res, next) => {
 
     const adminId = req.userId;
-    const taskId = req.params.taskId;
+    const boardId = req.params.boardId;
     // const title = req.body.title;
     // const desc = req.body.description;
 
@@ -83,37 +81,35 @@ exports.editTask = (req, res, next) => {
                 })
             } else {
                 if (success.role == 'admin') {
-                    Tasks.findById(taskId)
+                    Kanbans.findById(boardId)
                         .then(result => {
                             if (result == null || result.length < 1) {
                                 return res.status(404).json({
                                     success: 'false',
-                                    message: 'Task not found'
+                                    message: 'Kanban board not found'
                                 })
                             } else {
-                                if (req.body.title != null) {
-                                    result.title = req.body.title;
+                                if (req.body.name != null) {
+                                    result.name = req.body.name;
                                 }
-                                if (req.body.description != null) {
-                                    result.description = req.body.description;
+                                if (req.body.task != null) {
+                                    result._task = req.body.task;
                                 }
                                 if (req.body.user != null) {
                                     result._user = req.body.user;
                                 }
-                                if (req.body.module != null) {
-                                    result._module = req.body.module;
-                                }
-
 
                                 result.save()
                                     .then(result1 => {
                                         return res.status(200).json({
                                             success: 'true',
-                                            message: 'Task successfully updated'
+                                            message: 'Kanban board successfully updated'
                                         })
                                     })
                                     .catch(error1 => {
+                                        console.log(error1);
                                         return res.status(500).json({
+
                                             success: 'false',
                                             message: 'Some error occurred'
                                         })
@@ -121,6 +117,7 @@ exports.editTask = (req, res, next) => {
                             }
                         })
                         .catch(err => {
+                            console.log(err);
                             return res.status(500).json({
                                 success: 'false',
                                 message: 'Some error occurred'
@@ -135,6 +132,8 @@ exports.editTask = (req, res, next) => {
             }
         })
         .catch(err => {
+            console.log(err);
+
             return res.status(500).json({
                 success: 'false',
                 message: 'Some error has occurred'
@@ -143,10 +142,10 @@ exports.editTask = (req, res, next) => {
 }
 
 
-exports.deleteTask = (req, res, next) => {
+exports.deleteKanban = (req, res, next) => {
 
     const adminId = req.userId;
-    const taskId = req.params.taskId;
+    const boardId = req.params.boardId;
 
     Users.findById(adminId)
         .then(success => {
@@ -157,19 +156,19 @@ exports.deleteTask = (req, res, next) => {
                 })
             } else {
                 if (success.role == 'admin') {
-                    Tasks.findById(taskId)
+                    Kanbans.findById(boardId)
                         .then(result => {
                             if (result == null || result.length < 1) {
                                 return res.status(404).json({
                                     success: 'false',
-                                    message: 'Task not found'
+                                    message: 'Kanban board not found'
                                 })
                             } else {
-                                Tasks.findByIdAndDelete(taskId)
+                                Kanbans.findByIdAndDelete(boardId)
                                     .then(result1 => {
                                         return res.status(200).json({
                                             success: 'true',
-                                            message: 'Task successfully deleted'
+                                            message: 'Kanban board successfully deleted'
                                         })
                                     })
                                     .catch(error1 => {
@@ -202,7 +201,7 @@ exports.deleteTask = (req, res, next) => {
         })
 }
 
-exports.getTask = (req, res, next) => {
+exports.getKanban = (req, res, next) => {
 
     const userId = req.userId;
     Users.findById(userId)
@@ -213,18 +212,18 @@ exports.getTask = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Tasks.find({ _user: userId })
+                Kanbans.find({ _user: userId })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
                                 success: 'false',
-                                message: 'Task not found'
+                                message: 'Kanban board not found'
                             })
                         } else {
                             return res.status(200).json({
                                 success: 'true',
-                                message: 'Task Found',
-                                task: result
+                                message: 'Kanban board Found',
+                                Kanban_Board: result
                             })
 
                         }
@@ -246,49 +245,3 @@ exports.getTask = (req, res, next) => {
         })
 
 }
-
-exports.getModules = (req, res, next) => {
-    const userId = req.userId;
-    const moduleId = req.params.moduleId;
-    Users.findById(userId)
-        .then(success => {
-            if (success == null || success.length < 1) {
-                return res.status(404).json({
-                    success: "false",
-                    message: 'User Not found'
-                })
-            } else {
-                Tasks.find({ _user: userId, _module: moduleId })
-                    .then(result => {
-                        if (result == null || result.length < 1) {
-                            return res.status(404).json({
-                                success: 'false',
-                                message: 'No module associated found'
-                            })
-                        } else {
-                            return res.status(200).json({
-                                success: 'true',
-                                message: 'Module Found',
-                                task: result
-                            })
-
-                        }
-                    })
-                    .catch(err => {
-                        return res.status(500).json({
-                            success: 'false',
-                            message: 'Some error occurred'
-                        })
-                    })
-
-            }
-        })
-        .catch(err => {
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some error has occurred'
-            })
-        })
-
-}
-
