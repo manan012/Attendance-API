@@ -10,7 +10,7 @@ const project = require('../controllers/projects');
 const kanban = require('../controllers/kanban');
 const userAuth = require('../middleware/userAuth');
 
-router.post('/register', sign.register);
+router.post('/register', userAuth, sign.register);
 router.post('/login', sign.login);
 router.post('/attendance', userAuth, attendance.markAttendance);
 
