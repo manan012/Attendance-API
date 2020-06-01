@@ -12,6 +12,11 @@ const leaveSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    date: {
+        type: String,
+        default: Date,
+        required: true
+    },
     status: {
         type: String,
         required: true,

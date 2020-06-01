@@ -89,6 +89,7 @@ exports.editTask = (req, res, next) => {
                             } else {
                                 if (req.body.title != null) {
                                     result.title = req.body.title;
+
                                 }
                                 if (req.body.description != null) {
                                     result.description = req.body.description;
@@ -105,6 +106,8 @@ exports.editTask = (req, res, next) => {
                                         })
                                     })
                                     .catch(error1 => {
+                                        console.log(error1);
+
                                         return res.status(500).json({
                                             success: 'false',
                                             message: 'Some error occurred'
@@ -206,7 +209,7 @@ exports.getTask = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Tasks.find({ _user: employeeId},{title: true, description: true})
+                Tasks.find({ _user: employeeId }, { title: true, description: true })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({

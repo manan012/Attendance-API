@@ -8,12 +8,16 @@ const attendance = require('../controllers/attendance');
 const moduler = require('../controllers/module');
 const project = require('../controllers/projects');
 const kanban = require('../controllers/kanban');
+const leave = require('../controllers/leave');
+
 const userAuth = require('../middleware/userAuth');
 
 router.post('/register', userAuth, sign.register);
 router.post('/login', sign.login);
 router.post('/attendance', userAuth, attendance.markAttendance);
 router.put('/reset', sign.reset);
+router.put('/edit/:employeeId', userAuth, sign.editUser);
+router.delete('/delete/:employeeId', userAuth, sign.deleteUser);
 
 router.get('/attendance/all', userAuth, attendance.getAllAttendance);
 router.get('/attendance/:userId', userAuth, attendance.getAttendanceById);
@@ -41,6 +45,11 @@ router.post('/board', userAuth, kanban.createKanban);
 router.put('/board/:boardId', userAuth, kanban.editKanban);
 router.delete('/board/:boardId', userAuth, kanban.deleteKanban);
 router.get('/board', userAuth, kanban.getKanban);
+
+router.post('/leave', userAuth, leave.addRecord);
+router.get('/leave/all', userAuth, leave.getRecord);
+router.get('/leave', userAuth, leave.getMyRecord);
+router.put('/leave/:leaveId', userAuth, leave.editRecord);
 
 
 
