@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Task = require('./task');
-const Project1 = require('./project');
+const User = require('./user');
 
 const moduleSchema = mongoose.Schema({
     _id: {
@@ -14,10 +14,10 @@ const moduleSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: Task
     }],
-    _project: {
+    _member: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: Project1
-    }
+        ref: User,
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('module', moduleSchema);

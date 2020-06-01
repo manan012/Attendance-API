@@ -269,3 +269,40 @@ exports.getProject = (req, res, next) => {
 
 }
 
+exports.getModules = (req,res,next) => {
+    const userId = req.userId;
+    const projectId = req.params.projectId;
+    Users.findById(userId)
+        .then(success => {
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: "false",
+                    message: 'User Not found'
+                })
+            } else {
+                Projects.find({_members:userId, _id:projectId },{_modules:true})
+                .then(result => {
+                    if (result == null || result.length < 1) {
+                        return res.status(404).json({
+                            success: 'false',
+                            message: 'Project not found'
+                        })
+                    } else {
+                        return res.status(200).json({
+                            success: 'true',
+                            message: 'Project Found',
+                            modules: result
+                        })
+
+                    }
+                })
+
+            }
+        })
+        .catch(err => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error has occurred'
+            })
+        })
+}

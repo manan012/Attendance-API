@@ -25,10 +25,6 @@ exports.generateTask = (req, res, next) => {
                         task._user = req.body.user;
                     }
 
-                    if (req.body.module != null) {
-                        task._module = req.body.module;
-                    }
-
 
                     task.save()
                         .then(result => {
@@ -100,10 +96,6 @@ exports.editTask = (req, res, next) => {
                                 if (req.body.user != null) {
                                     result._user = req.body.user;
                                 }
-                                if (req.body.module != null) {
-                                    result._module = req.body.module;
-                                }
-
 
                                 result.save()
                                     .then(result1 => {
@@ -246,49 +238,3 @@ exports.getTask = (req, res, next) => {
         })
 
 }
-
-exports.getModules = (req, res, next) => {
-    const userId = req.userId;
-    const moduleId = req.params.moduleId;
-    Users.findById(userId)
-        .then(success => {
-            if (success == null || success.length < 1) {
-                return res.status(404).json({
-                    success: "false",
-                    message: 'User Not found'
-                })
-            } else {
-                Tasks.find({ _user: userId, _module: moduleId })
-                    .then(result => {
-                        if (result == null || result.length < 1) {
-                            return res.status(404).json({
-                                success: 'false',
-                                message: 'No module associated found'
-                            })
-                        } else {
-                            return res.status(200).json({
-                                success: 'true',
-                                message: 'Module Found',
-                                task: result
-                            })
-
-                        }
-                    })
-                    .catch(err => {
-                        return res.status(500).json({
-                            success: 'false',
-                            message: 'Some error occurred'
-                        })
-                    })
-
-            }
-        })
-        .catch(err => {
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some error has occurred'
-            })
-        })
-
-}
-

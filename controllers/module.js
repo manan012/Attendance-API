@@ -26,6 +26,9 @@ exports.createModule = (req, res, next) => {
                     if (req.body.project != null) {
                         module._project = req.body.project;
                     }
+                    if (req.body.member != null) {
+                        module._member = req.body.member;
+                    }
 
 
                     module.save()
@@ -91,7 +94,9 @@ exports.editModule = (req, res, next) => {
                                 if (req.body.project != null) {
                                     result._project = req.body.project;
                                 }
-
+                                if (req.body.member != null) {
+                                    module._member = req.body.member;
+                                }
 
                                 result.save()
                                     .then(result1 => {
@@ -191,9 +196,9 @@ exports.deleteModule = (req, res, next) => {
         })
 }
 
-exports.getProjects = (req, res, next) => {
+exports.getTasks = (req, res, next) => {
     const userId = req.userId;
-    const projectId = req.params.projectId;
+    const moduleId = req.params.moduleId;
     Users.findById(userId)
         .then(success => {
             if (success == null || success.length < 1) {
@@ -202,18 +207,18 @@ exports.getProjects = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Modules.find({ _user: userId, _project: projectId })
+                Modules.find({ _member: userId, _id: moduleId },{_task:true})
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
                                 success: 'false',
-                                message: 'Project not found'
+                                message: 'Module not found'
                             })
                         } else {
                             return res.status(200).json({
                                 success: 'true',
-                                message: 'Project Found',
-                                project: result
+                                message: 'Module Found',
+                                tasks: result
                             })
 
                         }
@@ -225,6 +230,7 @@ exports.getProjects = (req, res, next) => {
                         })
                     })
 
+
             }
         })
         .catch(err => {
@@ -233,5 +239,4 @@ exports.getProjects = (req, res, next) => {
                 message: 'Some error has occurred'
             })
         })
-
 }

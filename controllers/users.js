@@ -103,6 +103,8 @@ exports.login = (req, res, next) => {
                     });
                 }
                 if (result) {
+                    console.log(user[0].password)
+                    console.log(result);
                     const token = jwt.sign({
                         email: user[0].email,
                         userId: user[0]._id
@@ -121,4 +123,61 @@ exports.login = (req, res, next) => {
 
         })
         .catch(err => console.log('error: ', err))
+}
+
+
+exports.reset = (req, res, next) => {
+    const newPassword = req.body.newPassword;
+    Users.find({ email: req.body.email })
+        .exec()
+        .then(user => {
+            if (user.length < 1) {
+                return res.status(401).json({
+                    message: 'Auth failed'
+                })
+            }
+            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                if (err) {
+                    
+                    return res.status(401).json({
+                        message: 'Auth failed'
+                    });
+                }
+                if (result) {
+                    bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
+                        if (err) {
+                            return res.status(500).json({
+                                error: err
+                            })
+                        } else {
+                            user[0].password = hash;
+                            user[0].save()
+                            .then(resetSuccess => {
+                                return res.status(200).json({
+                                    success:'true',
+                                    message:'Password changed successfully'
+                                })
+                            })
+                            .catch(error12 => {
+                                return res.status(500).json({
+                                    success:'false',
+                                    message:'Error in resetting the password'
+                                })                         
+                            })
+
+                        }
+                    })
+                }
+                res.status(401).json({
+                    message: 'Auth failed'
+                });
+            })
+
+        })
+        .catch(err => {
+            return res.status(500).json({
+                success:'false',
+                message:'Some error occurred'
+            })
+        })
 }
