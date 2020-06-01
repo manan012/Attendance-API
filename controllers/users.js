@@ -106,7 +106,7 @@ exports.login = (req, res, next) => {
                     console.log(user[0].password)
                     console.log(result);
                     const token = jwt.sign({
-                        email: user[0].email,
+                        employeeId: user[0].employeeId,
                         userId: user[0]._id
                     }, 'secretkey', {
                         expiresIn: "1h"

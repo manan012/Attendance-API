@@ -15,7 +15,7 @@ const moduleSchema = mongoose.Schema({
         ref: Task
     }],
     _member: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: User,
     }]
 }, { timestamps: true });

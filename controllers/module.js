@@ -198,6 +198,7 @@ exports.deleteModule = (req, res, next) => {
 
 exports.getTasks = (req, res, next) => {
     const userId = req.userId;
+    const employeeId = req.employeeId;
     const moduleId = req.params.moduleId;
     Users.findById(userId)
         .then(success => {
@@ -207,7 +208,7 @@ exports.getTasks = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Modules.find({ _member: userId, _id: moduleId },{_task:true})
+                Modules.find({ _member: employeeId, _id: moduleId },{_task:true})
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({

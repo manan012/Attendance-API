@@ -19,7 +19,7 @@ const projectSchema = mongoose.Schema({
         ref: Module,
     }],
     _members: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: User,
     }]
 

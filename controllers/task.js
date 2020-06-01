@@ -197,6 +197,7 @@ exports.deleteTask = (req, res, next) => {
 exports.getTask = (req, res, next) => {
 
     const userId = req.userId;
+    const employeeId = req.employeeId;
     Users.findById(userId)
         .then(success => {
             if (success == null || success.length < 1) {
@@ -205,7 +206,7 @@ exports.getTask = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Tasks.find({ _user: userId })
+                Tasks.find({ _user: employeeId},{title: true, description: true})
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({

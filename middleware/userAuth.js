@@ -31,5 +31,6 @@ module.exports = (req, res, next) => {
     }
     //console.log(decodedtoken);
     req.userId = decodedtoken.userId;
+    req.employeeId = decodedtoken.employeeId;
     next();
 }

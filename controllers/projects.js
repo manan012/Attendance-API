@@ -181,6 +181,7 @@ exports.deleteProject = (req, res, next) => {
 exports.getAllProject = (req, res, next) => {
 
     const userId = req.userId;
+    const employeeId = req.employeeId;
     Users.findById(userId)
         .then(success => {
             if (success == null || success.length < 1) {
@@ -189,7 +190,7 @@ exports.getAllProject = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Projects.find({ _members: userId })
+                Projects.find({ _members: employeeId })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
@@ -226,6 +227,7 @@ exports.getAllProject = (req, res, next) => {
 
 exports.getProject = (req, res, next) => {
     const userId = req.userId;
+    const employeeId = req.employeeId;
     const projectId = req.params.projectId
     Users.findById(userId)
         .then(success => {
@@ -235,7 +237,7 @@ exports.getProject = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Projects.find({ _members: userId, _id: projectId })
+                Projects.find({ _members: employeeId, _id: projectId })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
@@ -271,6 +273,7 @@ exports.getProject = (req, res, next) => {
 
 exports.getModules = (req,res,next) => {
     const userId = req.userId;
+    const employeeId = req.employeeId;
     const projectId = req.params.projectId;
     Users.findById(userId)
         .then(success => {
@@ -280,7 +283,7 @@ exports.getModules = (req,res,next) => {
                     message: 'User Not found'
                 })
             } else {
-                Projects.find({_members:userId, _id:projectId },{_modules:true})
+                Projects.find({_members: employeeId, _id: projectId },{_modules:true})
                 .then(result => {
                     if (result == null || result.length < 1) {
                         return res.status(404).json({
