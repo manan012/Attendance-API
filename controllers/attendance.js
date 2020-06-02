@@ -41,7 +41,7 @@ exports.getAllAttendance = (req, res, next) => {
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
-                return res.status(404).json({
+                return res.status(200).json({
                     success: "false",
                     message: 'Admin Not found'
                 })
@@ -51,7 +51,7 @@ exports.getAllAttendance = (req, res, next) => {
                     Attendance.find({ date: { $gte: dateFrom, $lte: dateTo } })
                         .then(result => {
                             if (result == null || result.length < 1) {
-                                return res.status(404).json({
+                                return res.status(200).json({
                                     success: 'false',
                                     message: 'No attendance record found'
                                 })
@@ -71,7 +71,7 @@ exports.getAllAttendance = (req, res, next) => {
                         })
 
                 } else {
-                    return res.status(401).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'unauthorized Access'
                     })
@@ -127,7 +127,7 @@ exports.getAttendanceById = (req, res, next) => {
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
-                return res.status(404).json({
+                return res.status(200).json({
                     success: "false",
                     message: 'Admin Not found'
                 })
@@ -137,23 +137,22 @@ exports.getAttendanceById = (req, res, next) => {
                     Users.findById(id)
                         .then(myUser => {
                             if (myUser == null || myUser.length < 1) {
-                                return res.status(404).json({
+                                return res.status(200).json({
                                     success: 'false',
                                     message: 'User Not found'
                                 })
-                            }
-                            else {
+                            } else {
                                 Attendance.find({ _user: id, date: { $gte: dateFrom, $lte: dateTo } })
 
-                                    .then(result => {
+                                .then(result => {
                                         if (result == null || result.length < 1) {
-                                            return res.status(404).json({
-                                                success: "false",
+                                            return res.status(200).json({
+                                                success: 'false',
                                                 message: 'Attendance Record of User Not found'
                                             })
                                         } else {
                                             return res.status(200).json({
-                                                message: "success",
+                                                success: 'true',
                                                 AttendanceRecord: result
                                             })
 
@@ -177,7 +176,7 @@ exports.getAttendanceById = (req, res, next) => {
                         })
 
                 } else {
-                    return res.status(401).json({
+                    return res.status(200).json({
                         success: "false",
                         message: "Unauthorized Access"
                     })
@@ -233,14 +232,13 @@ exports.markAttendance = (req, res, next) => {
         .exec()
         .then(result => {
             if (result == null || result.length < 1) {
-                return res.status(404).json({
+                return res.status(200).json({
                     success: "false",
                     message: "User not exists",
 
                 })
 
-            }
-            else {
+            } else {
                 // Users.findByIdAndUpdate({ _id: id }, { onLeave: false }, function (err1, success1) {
                 //     if (err1) {
                 //         console.log("error in user");
@@ -285,7 +283,7 @@ exports.markAttendance = (req, res, next) => {
                                 })
                         } else {
                             //console.log("success ", success);
-                            return res.status(403).json({
+                            return res.status(200).json({
                                 success: "false",
                                 message: "Attendance already marked"
                             })
