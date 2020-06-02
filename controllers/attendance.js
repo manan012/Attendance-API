@@ -41,7 +41,7 @@ exports.getAllAttendance = (req, res, next) => {
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
-                return res.status(200).json({
+                return res.status(404).json({
                     success: "false",
                     message: 'Admin Not found'
                 })
@@ -71,7 +71,7 @@ exports.getAllAttendance = (req, res, next) => {
                         })
 
                 } else {
-                    return res.status(200).json({
+                    return res.status(401).json({
                         success: 'false',
                         message: 'unauthorized Access'
                     })
@@ -127,7 +127,7 @@ exports.getAttendanceById = (req, res, next) => {
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
-                return res.status(200).json({
+                return res.status(404).json({
                     success: "false",
                     message: 'Admin Not found'
                 })
@@ -137,7 +137,7 @@ exports.getAttendanceById = (req, res, next) => {
                     Users.findById(id)
                         .then(myUser => {
                             if (myUser == null || myUser.length < 1) {
-                                return res.status(200).json({
+                                return res.status(404).json({
                                     success: 'false',
                                     message: 'User Not found'
                                 })
@@ -176,7 +176,7 @@ exports.getAttendanceById = (req, res, next) => {
                         })
 
                 } else {
-                    return res.status(200).json({
+                    return res.status(401).json({
                         success: "false",
                         message: "Unauthorized Access"
                     })
@@ -232,7 +232,7 @@ exports.markAttendance = (req, res, next) => {
         .exec()
         .then(result => {
             if (result == null || result.length < 1) {
-                return res.status(200).json({
+                return res.status(404).json({
                     success: "false",
                     message: "User not exists",
 
@@ -283,7 +283,7 @@ exports.markAttendance = (req, res, next) => {
                                 })
                         } else {
                             //console.log("success ", success);
-                            return res.status(200).json({
+                            return res.status(403).json({
                                 success: "false",
                                 message: "Attendance already marked"
                             })
