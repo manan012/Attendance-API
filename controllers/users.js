@@ -11,26 +11,30 @@ exports.register = (req, res, next) => {
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
-                res.status(200).json({
+                res.status(404).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
+		return 1;
             } else {
                 if (success.role == 'admin') {
                     Users.find({ email: req.body.email })
                         .exec()
                         .then(user => {
                             if (user.length >= 1) {
-                                res.status(200).json({
+                                res.status(403).json({
+				    success:'false',
                                     message: 'Email Id already exists!'
                                 })
+				return 1;
                             } else {
                                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                                     if (err) {
                                         res.status(500).json({
                                             success: 'false',
-                                            error: err
+                                            message: 'Some error occurred'
                                         })
+					return 1;
                                     } else {
                                         const user = new Users({
 
@@ -50,12 +54,16 @@ exports.register = (req, res, next) => {
                                                     success: "true",
                                                     message: "User successfully created"
                                                 })
+						return 1;
                                             })
                                             .catch(err => {
                                                 console.log(err);
-                                                res.status(500).json({
-                                                    error: err
+                                                res.status(400).json({
+						    success: "false",
+                                                    message: "All fields are not set properly. Some error occurred"
+							
                                                 });
+						return 1;
                                             });
                                     }
                                 })
@@ -67,13 +75,15 @@ exports.register = (req, res, next) => {
                                 success: 'false',
                                 message: 'Some error occurred'
                             })
+				return 1;
                         })
 
                 } else {
-                    res.status(200).json({
+                    res.status(401).json({
                         success: 'false',
                         message: 'Unauthorized Access'
                     })
+		return 1;
                 }
             }
         })
@@ -82,6 +92,7 @@ exports.register = (req, res, next) => {
                 success: 'false',
                 message: 'Some error occurred'
             })
+		return 1;
         })
 
 
@@ -94,19 +105,21 @@ exports.deleteUser = (req, res, next) => {
         .exec()
         .then(success => {
             if (success == null || success.length > 1) {
-                res.status(200).json({
+                res.status(404).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
+		return 1;
             } else {
                 if (success.role == 'admin') {
                     Users.find({ employeeId: employeeId })
                         .then(success1 => {
                             if (success1 == null || success1.length < 1) {
-                                res.status(200).json({
+                                res.status(404).json({
                                     success: 'false',
                                     message: 'User not found'
                                 })
+				return 1;
                             } else {
                                 Users.findByIdAndDelete(success1[0]._id)
                                     .then(result1 => {
@@ -114,12 +127,14 @@ exports.deleteUser = (req, res, next) => {
                                             success: 'true',
                                             message: 'User successfully deleted'
                                         })
+					return 1;
                                     })
                                     .catch(error1 => {
                                         res.status(500).json({
                                             success: 'false',
                                             message: 'Some error occurred'
                                         })
+					return 1;
                                     })
                             }
                         })
@@ -128,13 +143,15 @@ exports.deleteUser = (req, res, next) => {
                                 success: 'false',
                                 message: 'Some error occurred'
                             })
+				return 1;
                         })
 
                 } else {
-                    res.status(200).json({
+                    res.status(401).json({
                         success: 'false',
                         message: 'Unauthorized access'
                     })
+			return 1;
                 }
             }
         })
@@ -143,6 +160,7 @@ exports.deleteUser = (req, res, next) => {
                 success: 'false',
                 message: 'Some error occurred'
             })
+		return 1;
         })
 }
 
@@ -180,9 +198,10 @@ exports.login = (req, res, next) => {
                     return 1;
                 }
                 res.status(401).json({
-                    success: 'false111',
+                    success: 'false',
                     message: 'Auth failed'
                 });
+		return 1;
             })
 
         })
@@ -192,6 +211,7 @@ exports.login = (req, res, next) => {
                 success: 'false',
                 message: 'Some error occurred'
             })
+		return 1;
         })
 }
 
@@ -204,19 +224,21 @@ exports.editUser = (req, res, next) => {
         .exec()
         .then(success => {
             if (success == null || success.length > 1) {
-                res.status(200).json({
+                res.status(404).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
+		return 1;
             } else {
                 if (success.role == 'admin') {
                     Users.find({ employeeId: employeeId })
                         .then(success1 => {
                             if (success1 == null || success1.length < 1) {
-                                res.status(200).json({
+                                res.status(404).json({
                                     success: 'false',
                                     message: 'User not found'
                                 })
+				return 1;
                             } else {
                                 if (req.body.name != null) {
                                     success1[0].name = req.body.name;
@@ -244,6 +266,7 @@ exports.editUser = (req, res, next) => {
                                             success: 'true',
                                             message: 'Task successfully updated'
                                         })
+					return 1;
                                     })
                                     .catch(error1 => {
                                         console.log(error1);
@@ -251,22 +274,25 @@ exports.editUser = (req, res, next) => {
                                             success: 'false',
                                             message: 'Some error occurred'
                                         })
+					return 1;
                                     })
                             }
                         })
-                        .catch(error3 => {
-                            console.log(error3);
+                        .catch(error2 => {
+                            console.log(error2);
 
                             res.status(500).json({
                                 success: 'false',
                                 message: 'Some error occurred'
                             })
+				return 1;
                         })
                 } else {
-                    res.status(200).json({
+                    res.status(401).json({
                         success: 'false',
                         message: 'Unauthorized access'
                     })
+			return 1;
                 }
             }
         })
@@ -275,6 +301,7 @@ exports.editUser = (req, res, next) => {
                 success: 'false',
                 message: 'Some error occurred'
             })
+		return 1;
         })
 
 }
@@ -285,26 +312,29 @@ exports.reset = (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length < 1) {
-                res.status(200).json({
+                res.status(404).json({
                     success: 'false',
-                    message: 'Auth failed'
+                    message: 'User not found'
                 })
+			return 1;
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (err) {
 
-                    res.status(200).json({
+                    res.status(401).json({
                         success: 'false',
                         message: 'Auth failed'
                     });
+			return 1;
                 }
                 if (result) {
                     bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
                         if (err) {
                             res.status(500).json({
                                 success: 'false',
-                                error: err
+                                message: 'Some error occurred'
                             })
+				return 1;
                         } else {
                             user[0].password = hash;
                             user[0].save()
@@ -313,21 +343,24 @@ exports.reset = (req, res, next) => {
                                         success: 'true',
                                         message: 'Password changed successfully'
                                     })
+					return 1;
                                 })
                                 .catch(error12 => {
                                     res.status(500).json({
                                         success: 'false',
                                         message: 'Error in resetting the password'
                                     })
+					return 1;
                                 })
 
                         }
                     })
                 }
-                res.status(200).json({
+                res.status(401).json({
                     success: 'false',
                     message: 'Auth failed'
                 });
+			return 1;
             })
 
         })
@@ -336,6 +369,7 @@ exports.reset = (req, res, next) => {
                 success: 'false',
                 message: 'Some error occurred'
             })
+		return 1;
         })
 }
 
@@ -346,16 +380,18 @@ exports.getUser = (req, res, next) => {
             console.log(success);
 
             if (success == null || success.length < 1) {
-                res.status(200).json({
+                res.status(404).json({
                     success: 'false',
                     message: 'User not found'
                 })
+		return 1;
             } else {
                 res.status(200).json({
                     success: 'true',
                     message: 'User found',
                     user: success
                 })
+		return 1;
             }
         })
         .catch(err => {
@@ -365,5 +401,6 @@ exports.getUser = (req, res, next) => {
                 success: 'false',
                 message: 'Some error occurred'
             })
+		return 1;
         })
 }
