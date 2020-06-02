@@ -37,6 +37,10 @@ const userSchema = mongoose.Schema({
     onLeave: {
         type: Boolean,
         default: false
+    },
+    leaveCount: {
+        type: Number,
+        default: 5
     }
 
 }, { timestamps: true });

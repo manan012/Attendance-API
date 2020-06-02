@@ -162,8 +162,6 @@ exports.login = (req, res, next) => {
                     });
                 }
                 if (result) {
-                    console.log(user[0].password)
-                    console.log(result);
                     const token = jwt.sign({
                         employeeId: user[0].employeeId,
                         userId: user[0]._id
@@ -317,6 +315,35 @@ exports.reset = (req, res, next) => {
 
         })
         .catch(err => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error occurred'
+            })
+        })
+}
+
+exports.getUser = (req, res, next) => {
+    const userId = req.userId;
+    Users.findById(userId)
+        .then(success => {
+            console.log(success);
+
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: 'false',
+                    message: 'User not found'
+                })
+            } else {
+                return res.status(200).json({
+                    success: 'true',
+                    message: 'User found',
+                    user: success
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+
             return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'

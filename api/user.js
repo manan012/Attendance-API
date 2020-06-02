@@ -18,6 +18,7 @@ router.post('/attendance', userAuth, attendance.markAttendance);
 router.put('/reset', sign.reset);
 router.put('/edit/:employeeId', userAuth, sign.editUser);
 router.delete('/delete/:employeeId', userAuth, sign.deleteUser);
+router.get('/user', userAuth, sign.getUser);
 
 router.get('/attendance/all', userAuth, attendance.getAllAttendance);
 router.get('/attendance/:userId', userAuth, attendance.getAttendanceById);
@@ -48,7 +49,9 @@ router.get('/board', userAuth, kanban.getKanban);
 
 router.post('/leave', userAuth, leave.addRecord);
 router.get('/leave/all', userAuth, leave.getRecord);
-router.get('/leave', userAuth, leave.getMyRecord);
+router.get('/leave/pending', userAuth, leave.getMyRecord_pending);
+router.get('/leave/approved', userAuth, leave.getMyRecord_approved);
+router.get('/leave/rejected', userAuth, leave.getMyRecord_rejected);
 router.put('/leave/:leaveId', userAuth, leave.editRecord);
 
 

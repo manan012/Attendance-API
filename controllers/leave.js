@@ -109,6 +109,26 @@ exports.editRecord = (req, res, next) => {
                                     message: 'Leave Record not found'
                                 })
                             } else {
+                                if (status == 'approved') {
+                                    console.log(result.employeeId);
+                                    Users.find({ employeeId: result.employeeId })
+                                        .then(success13 => {
+                                            if (success13 == null || success13.length < 1) {
+                                                return res.status(404).json({
+                                                    success: 'false',
+                                                    message: 'User not found'
+                                                })
+                                            } else {
+                                                if (success13[0].leaveCount > 0) {
+                                                    success13[0].leaveCount = success13[0].leaveCount - 1;
+                                                    success13[0].save();
+                                                    console.log('count:', success13[0].leaveCount);
+                                                }
+
+                                            }
+                                        })
+
+                                }
                                 result.status = status;
                                 result.save()
                                     .then(result1 => {
@@ -152,7 +172,7 @@ exports.editRecord = (req, res, next) => {
 }
 
 
-exports.getMyRecord = (req, res, next) => {
+exports.getMyRecord_pending = (req, res, next) => {
     const userId = req.userId;
     const employeeId = req.employeeId;
     Users.findById(userId)
@@ -164,7 +184,7 @@ exports.getMyRecord = (req, res, next) => {
                 })
             } else {
 
-                Leaves.find({ employeeId: employeeId })
+                Leaves.find({ employeeId: employeeId, status: 'pending' })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(200).json({
@@ -185,9 +205,95 @@ exports.getMyRecord = (req, res, next) => {
                             message: 'Some error occurred'
                         })
                     })
+            }
+        })
+        .catch(error2 => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error occurred'
+            })
+        })
+
+}
 
 
+exports.getMyRecord_approved = (req, res, next) => {
+    const userId = req.userId;
+    const employeeId = req.employeeId;
+    Users.findById(userId)
+        .then(success => {
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: 'false',
+                    message: 'User not found'
+                })
+            } else {
 
+                Leaves.find({ employeeId: employeeId, status: 'approved' })
+                    .then(result => {
+                        if (result == null || result.length < 1) {
+                            return res.status(200).json({
+                                success: 'true',
+                                message: 'No Leave record found!'
+                            })
+                        } else {
+                            return res.status(200).json({
+                                success: 'true',
+                                message: 'Leave record found',
+                                Record: result
+                            })
+                        }
+                    })
+                    .catch(error1 => {
+                        return res.status(500).json({
+                            success: 'false',
+                            message: 'Some error occurred'
+                        })
+                    })
+            }
+        })
+        .catch(error2 => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error occurred'
+            })
+        })
+
+}
+
+exports.getMyRecord_rejected = (req, res, next) => {
+    const userId = req.userId;
+    const employeeId = req.employeeId;
+    Users.findById(userId)
+        .then(success => {
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: 'false',
+                    message: 'User not found'
+                })
+            } else {
+
+                Leaves.find({ employeeId: employeeId, status: 'rejected' })
+                    .then(result => {
+                        if (result == null || result.length < 1) {
+                            return res.status(200).json({
+                                success: 'true',
+                                message: 'No Leave record found!'
+                            })
+                        } else {
+                            return res.status(200).json({
+                                success: 'true',
+                                message: 'Leave record found',
+                                Record: result
+                            })
+                        }
+                    })
+                    .catch(error1 => {
+                        return res.status(500).json({
+                            success: 'false',
+                            message: 'Some error occurred'
+                        })
+                    })
             }
         })
         .catch(error2 => {
