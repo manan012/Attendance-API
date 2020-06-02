@@ -11,7 +11,7 @@ exports.register = (req, res, next) => {
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
-                return res.status(404).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
@@ -21,15 +21,14 @@ exports.register = (req, res, next) => {
                         .exec()
                         .then(user => {
                             if (user.length >= 1) {
-                                return res.status(409).json({
+                                return res.status(200).json({
+                                    success: 'false',
                                     message: 'Email Id already exists!'
                                 })
                             } else {
                                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                                     if (err) {
-                                        return res.status(500).json({
-                                            error: err
-                                        })
+                                        throw err;
                                     } else {
                                         const user = new Users({
 
@@ -52,24 +51,20 @@ exports.register = (req, res, next) => {
                                             })
                                             .catch(err => {
                                                 console.log(err);
-                                                return res.status(500).json({
-                                                    error: err
-                                                });
+                                                throw err;
                                             });
                                     }
                                 })
+
                             }
                         })
-                        .catch(err => {
-                            console.log('error: ', err);
-                            return res.status(500).json({
-                                success: 'false',
-                                message: 'Some error occurred'
-                            })
+                        .catch(err1 => {
+                            console.log('error: ', err1);
+                            throw err1;
                         })
 
                 } else {
-                    return res.status(401).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Unauthorized Access'
                     })
@@ -77,10 +72,7 @@ exports.register = (req, res, next) => {
             }
         })
         .catch(error => {
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some error occurred'
-            })
+            throw error;
         })
 
 
@@ -93,7 +85,7 @@ exports.deleteUser = (req, res, next) => {
         .exec()
         .then(success => {
             if (success == null || success.length > 1) {
-                return res.status(404).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
@@ -102,7 +94,7 @@ exports.deleteUser = (req, res, next) => {
                     Users.find({ employeeId: employeeId })
                         .then(success1 => {
                             if (success1 == null || success1.length < 1) {
-                                return res.status(404).json({
+                                return res.status(200).json({
                                     success: 'false',
                                     message: 'User not found'
                                 })
@@ -115,22 +107,16 @@ exports.deleteUser = (req, res, next) => {
                                         })
                                     })
                                     .catch(error1 => {
-                                        return res.status(500).json({
-                                            success: 'false',
-                                            message: 'Some error occurred'
-                                        })
+                                        throw error1;
                                     })
                             }
                         })
                         .catch(error2 => {
-                            return res.status(500).json({
-                                success: 'false',
-                                message: 'Some error occurred'
-                            })
+                            throw error2;
                         })
 
                 } else {
-                    return res.status(401).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Unauthorized access'
                     })
@@ -138,10 +124,7 @@ exports.deleteUser = (req, res, next) => {
             }
         })
         .catch(error3 => {
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some error occurred'
-            })
+            throw error3;
         })
 }
 
@@ -151,15 +134,14 @@ exports.login = (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length < 1) {
-                return res.status(401).json({
+                return res.status(200).json({
+                    success: 'false',
                     message: 'Auth failed'
                 })
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (err) {
-                    return res.status(401).json({
-                        message: 'Auth failed'
-                    });
+                    throw err;
                 }
                 if (result) {
                     const token = jwt.sign({
@@ -173,13 +155,16 @@ exports.login = (req, res, next) => {
                         token: token
                     })
                 }
-                res.status(401).json({
+                res.status(200).json({
+                    success: 'false',
                     message: 'Auth failed'
                 });
             })
 
         })
-        .catch(err => console.log('error: ', err))
+        .catch(err => {
+            throw err;
+        })
 }
 
 
@@ -191,7 +176,7 @@ exports.editUser = (req, res, next) => {
         .exec()
         .then(success => {
             if (success == null || success.length > 1) {
-                return res.status(404).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
@@ -200,7 +185,7 @@ exports.editUser = (req, res, next) => {
                     Users.find({ employeeId: employeeId })
                         .then(success1 => {
                             if (success1 == null || success1.length < 1) {
-                                return res.status(404).json({
+                                return res.status(200).json({
                                     success: 'false',
                                     message: 'User not found'
                                 })
@@ -229,39 +214,29 @@ exports.editUser = (req, res, next) => {
                                     .then(result1 => {
                                         return res.status(200).json({
                                             success: 'true',
-                                            message: 'Task successfully updated'
+                                            message: 'User successfully updated'
                                         })
                                     })
                                     .catch(error1 => {
                                         console.log(error1);
-                                        return res.status(500).json({
-                                            success: 'false',
-                                            message: 'Some error occurred'
-                                        })
+                                        throw error1;
                                     })
                             }
                         })
                         .catch(error3 => {
                             console.log(error3);
-
-                            return res.status(500).json({
-                                success: 'false',
-                                message: 'Some error occurred'
-                            })
+                            throw error3;
                         })
                 } else {
-                    return res.status(401).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Unauthorized access'
                     })
                 }
             }
         })
-        .catch(error3 => {
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some error occurred'
-            })
+        .catch(error4 => {
+            throw error4;
         })
 
 }
@@ -272,23 +247,19 @@ exports.reset = (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length < 1) {
-                return res.status(401).json({
+                return res.status(200).json({
+                    success: 'false',
                     message: 'Auth failed'
                 })
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (err) {
-
-                    return res.status(401).json({
-                        message: 'Auth failed'
-                    });
+                    throw err;
                 }
                 if (result) {
                     bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
-                        if (err) {
-                            return res.status(500).json({
-                                error: err
-                            })
+                        if (err1) {
+                            throw err1;
                         } else {
                             user[0].password = hash;
                             user[0].save()
@@ -299,26 +270,21 @@ exports.reset = (req, res, next) => {
                                     })
                                 })
                                 .catch(error12 => {
-                                    return res.status(500).json({
-                                        success: 'false',
-                                        message: 'Error in resetting the password'
-                                    })
+                                    throw error12;
                                 })
 
                         }
                     })
                 }
-                res.status(401).json({
+                res.status(200).json({
+                    success: 'false',
                     message: 'Auth failed'
                 });
             })
 
         })
-        .catch(err => {
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some error occurred'
-            })
+        .catch(err12 => {
+            throw error12;
         })
 }
 
@@ -329,7 +295,7 @@ exports.getUser = (req, res, next) => {
             console.log(success);
 
             if (success == null || success.length < 1) {
-                return res.status(404).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'User not found'
                 })
@@ -344,9 +310,6 @@ exports.getUser = (req, res, next) => {
         .catch(err => {
             console.log(err);
 
-            return res.status(500).json({
-                success: 'false',
-                message: 'Some error occurred'
-            })
+            throw err;
         })
 }
