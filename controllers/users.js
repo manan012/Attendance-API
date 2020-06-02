@@ -11,7 +11,7 @@ exports.register = (req, res, next) => {
     Users.findById(adminId)
         .then(success => {
             if (success == null || success.length < 1) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
@@ -21,13 +21,13 @@ exports.register = (req, res, next) => {
                         .exec()
                         .then(user => {
                             if (user.length >= 1) {
-                                res.status(200).json({
+                                return res.status(200).json({
                                     message: 'Email Id already exists!'
                                 })
                             } else {
                                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                                     if (err) {
-                                        res.status(500).json({
+                                        return res.status(500).json({
                                             success: 'false',
                                             error: err
                                         })
@@ -46,14 +46,14 @@ exports.register = (req, res, next) => {
                                         user.save()
                                             .then(result => {
                                                 console.log(result);
-                                                res.status(201).json({
+                                                return res.status(201).json({
                                                     success: "true",
                                                     message: "User successfully created"
                                                 })
                                             })
                                             .catch(err => {
                                                 console.log(err);
-                                                res.status(500).json({
+                                                return res.status(500).json({
                                                     error: err
                                                 });
                                             });
@@ -63,14 +63,14 @@ exports.register = (req, res, next) => {
                         })
                         .catch(err => {
                             console.log('error: ', err);
-                            res.status(500).json({
+                            return res.status(500).json({
                                 success: 'false',
                                 message: 'Some error occurred'
                             })
                         })
 
                 } else {
-                    res.status(200).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Unauthorized Access'
                     })
@@ -78,7 +78,7 @@ exports.register = (req, res, next) => {
             }
         })
         .catch(error => {
-            res.status(500).json({
+            return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'
             })
@@ -94,7 +94,7 @@ exports.deleteUser = (req, res, next) => {
         .exec()
         .then(success => {
             if (success == null || success.length > 1) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
@@ -103,20 +103,20 @@ exports.deleteUser = (req, res, next) => {
                     Users.find({ employeeId: employeeId })
                         .then(success1 => {
                             if (success1 == null || success1.length < 1) {
-                                res.status(200).json({
+                                return res.status(200).json({
                                     success: 'false',
                                     message: 'User not found'
                                 })
                             } else {
                                 Users.findByIdAndDelete(success1[0]._id)
                                     .then(result1 => {
-                                        res.status(200).json({
+                                        return res.status(200).json({
                                             success: 'true',
                                             message: 'User successfully deleted'
                                         })
                                     })
                                     .catch(error1 => {
-                                        res.status(500).json({
+                                        return res.status(500).json({
                                             success: 'false',
                                             message: 'Some error occurred'
                                         })
@@ -124,14 +124,14 @@ exports.deleteUser = (req, res, next) => {
                             }
                         })
                         .catch(error2 => {
-                            res.status(500).json({
+                            return res.status(500).json({
                                 success: 'false',
                                 message: 'Some error occurred'
                             })
                         })
 
                 } else {
-                    res.status(200).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Unauthorized access'
                     })
@@ -139,7 +139,7 @@ exports.deleteUser = (req, res, next) => {
             }
         })
         .catch(error3 => {
-            res.status(500).json({
+            return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'
             })
@@ -152,14 +152,14 @@ exports.login = (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length < 1) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Auth failed'
                 })
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (err) {
-                    res.status(200).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Auth failed'
                     });
@@ -171,13 +171,13 @@ exports.login = (req, res, next) => {
                     }, 'secretkey', {
                         expiresIn: "1h"
                     });
-                    res.status(200).json({
+                    return res.status(200).json({
                         success: 'true',
                         message: 'Auth Successful',
                         token: token
                     })
                 }
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Auth failed'
                 });
@@ -186,7 +186,7 @@ exports.login = (req, res, next) => {
         })
         .catch(err => {
             console.log('error: ', err);
-            res.status(500).json({
+            return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'
             })
@@ -202,7 +202,7 @@ exports.editUser = (req, res, next) => {
         .exec()
         .then(success => {
             if (success == null || success.length > 1) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Admin not found'
                 })
@@ -211,7 +211,7 @@ exports.editUser = (req, res, next) => {
                     Users.find({ employeeId: employeeId })
                         .then(success1 => {
                             if (success1 == null || success1.length < 1) {
-                                res.status(200).json({
+                                return res.status(200).json({
                                     success: 'false',
                                     message: 'User not found'
                                 })
@@ -238,14 +238,14 @@ exports.editUser = (req, res, next) => {
                                 }
                                 success1[0].save()
                                     .then(result1 => {
-                                        res.status(200).json({
+                                        return res.status(200).json({
                                             success: 'true',
                                             message: 'Task successfully updated'
                                         })
                                     })
                                     .catch(error1 => {
                                         console.log(error1);
-                                        res.status(500).json({
+                                        return res.status(500).json({
                                             success: 'false',
                                             message: 'Some error occurred'
                                         })
@@ -255,13 +255,13 @@ exports.editUser = (req, res, next) => {
                         .catch(error3 => {
                             console.log(error3);
 
-                            res.status(500).json({
+                            return res.status(500).json({
                                 success: 'false',
                                 message: 'Some error occurred'
                             })
                         })
                 } else {
-                    res.status(200).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Unauthorized access'
                     })
@@ -269,7 +269,7 @@ exports.editUser = (req, res, next) => {
             }
         })
         .catch(error3 => {
-            res.status(500).json({
+            return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'
             })
@@ -283,7 +283,7 @@ exports.reset = (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length < 1) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Auth failed'
                 })
@@ -291,7 +291,7 @@ exports.reset = (req, res, next) => {
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (err) {
 
-                    res.status(200).json({
+                    return res.status(200).json({
                         success: 'false',
                         message: 'Auth failed'
                     });
@@ -299,7 +299,7 @@ exports.reset = (req, res, next) => {
                 if (result) {
                     bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
                         if (err) {
-                            res.status(500).json({
+                            return res.status(500).json({
                                 success: 'false',
                                 error: err
                             })
@@ -307,13 +307,13 @@ exports.reset = (req, res, next) => {
                             user[0].password = hash;
                             user[0].save()
                                 .then(resetSuccess => {
-                                    res.status(200).json({
+                                    return res.status(200).json({
                                         success: 'true',
                                         message: 'Password changed successfully'
                                     })
                                 })
                                 .catch(error12 => {
-                                    res.status(500).json({
+                                    return res.status(500).json({
                                         success: 'false',
                                         message: 'Error in resetting the password'
                                     })
@@ -322,7 +322,7 @@ exports.reset = (req, res, next) => {
                         }
                     })
                 }
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'Auth failed'
                 });
@@ -330,7 +330,7 @@ exports.reset = (req, res, next) => {
 
         })
         .catch(err1 => {
-            res.status(500).json({
+            return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'
             })
@@ -344,12 +344,12 @@ exports.getUser = (req, res, next) => {
             console.log(success);
 
             if (success == null || success.length < 1) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'false',
                     message: 'User not found'
                 })
             } else {
-                res.status(200).json({
+                return res.status(200).json({
                     success: 'true',
                     message: 'User found',
                     user: success
@@ -359,7 +359,7 @@ exports.getUser = (req, res, next) => {
         .catch(err => {
             console.log(err);
 
-            res.status(500).json({
+            return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'
             })
