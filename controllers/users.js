@@ -152,7 +152,7 @@ exports.login = (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length < 1) {
-                res.status(403).json({
+                res.status(401).json({
                     success: 'false',
                     message: 'Auth failed'
                 })
@@ -160,7 +160,7 @@ exports.login = (req, res, next) => {
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if (err) {
-                    res.status(403).json({
+                    res.status(401).json({
                         success: 'false',
                         message: 'Auth failed'
                     });
@@ -179,7 +179,7 @@ exports.login = (req, res, next) => {
                     })
                     return 1;
                 }
-                res.status(403).json({
+                res.status(401).json({
                     success: 'false111',
                     message: 'Auth failed'
                 });
