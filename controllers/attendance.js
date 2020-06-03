@@ -51,7 +51,7 @@ exports.getAllAttendance = (req, res, next) => {
                     Attendance.find({ date: { $gte: dateFrom, $lte: dateTo } })
                         .then(result => {
                             if (result == null || result.length < 1) {
-                                return res.status(200).json({
+                                return res.status(404).json({
                                     success: 'false',
                                     message: 'No attendance record found'
                                 })
@@ -146,7 +146,7 @@ exports.getAttendanceById = (req, res, next) => {
 
                                 .then(result => {
                                         if (result == null || result.length < 1) {
-                                            return res.status(200).json({
+                                            return res.status(404).json({
                                                 success: 'false',
                                                 message: 'Attendance Record of User Not found'
                                             })
@@ -201,6 +201,7 @@ exports.getAttendanceById = (req, res, next) => {
 
 exports.markAttendance = (req, res, next) => {
     const id = req.userId;
+    const employeeId = req.employeeId;
     var d = new Date();
     var a = d.getFullYear();
     var b = d.getMonth();
@@ -249,7 +250,7 @@ exports.markAttendance = (req, res, next) => {
                 //     }
 
                 // })
-                Attendance.findOne({ _user: id, date: { $gte: qw } })
+                Attendance.findOne({ _user: employeeId, date: { $gte: qw } })
                     .exec()
                     .then(success => {
 

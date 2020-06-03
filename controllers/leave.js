@@ -187,8 +187,8 @@ exports.getMyRecord_pending = (req, res, next) => {
                 Leaves.find({ employeeId: employeeId, status: 'pending' })
                     .then(result => {
                         if (result == null || result.length < 1) {
-                            return res.status(200).json({
-                                success: 'true',
+                            return res.status(404).json({
+                                success: 'false',
                                 message: 'No Leave record found!'
                             })
                         } else {
@@ -232,8 +232,8 @@ exports.getMyRecord_approved = (req, res, next) => {
                 Leaves.find({ employeeId: employeeId, status: 'approved' })
                     .then(result => {
                         if (result == null || result.length < 1) {
-                            return res.status(200).json({
-                                success: 'true',
+                            return res.status(404).json({
+                                success: 'false',
                                 message: 'No Leave record found!'
                             })
                         } else {
@@ -276,8 +276,8 @@ exports.getMyRecord_rejected = (req, res, next) => {
                 Leaves.find({ employeeId: employeeId, status: 'rejected' })
                     .then(result => {
                         if (result == null || result.length < 1) {
-                            return res.status(200).json({
-                                success: 'true',
+                            return res.status(404).json({
+                                success: 'false',
                                 message: 'No Leave record found!'
                             })
                         } else {

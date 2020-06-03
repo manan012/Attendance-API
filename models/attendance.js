@@ -20,7 +20,7 @@ const attendanceSchema = mongoose.Schema({
     },
     _user: {
 
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: User
 
     },
