@@ -223,7 +223,7 @@ exports.editUser = (req, res, next) => {
     Users.findById(adminId)
         .exec()
         .then(success => {
-            if (success == null || success.length > 1) {
+            if (success == null || success.length < 1) {
                 res.status(404).json({
                     success: 'false',
                     message: 'Admin not found'
@@ -233,6 +233,7 @@ exports.editUser = (req, res, next) => {
                 if (success.role == 'admin') {
                     Users.findById(userId)
                         .then(success1 => {
+                            console.log(success1);
                             if (success1 == null || success1.length < 1) {
                                 res.status(404).json({
                                     success: 'false',
@@ -241,30 +242,30 @@ exports.editUser = (req, res, next) => {
                                 return 1;
                             } else {
                                 if (req.body.name != null) {
-                                    success1[0].name = req.body.name;
+                                    success1.name = req.body.name;
                                 }
                                 if (req.body.email != null) {
-                                    success1[0].email = req.body.email;
+                                    success1.email = req.body.email;
                                 }
                                 if (req.body.employeeId != null) {
-                                    success1[0].employeeId = req.body.employeeId;
+                                    success1.employeeId = req.body.employeeId;
                                 }
                                 if (req.body.phone != null) {
-                                    success1[0].phone = req.body.phone;
+                                    success1.phone = req.body.phone;
 
                                 }
                                 if (req.body.category != null) {
-                                    success1[0].category = req.body.category;
+                                    success1.category = req.body.category;
                                 }
                                 if (req.body.role != null) {
-                                    success1[0].role = req.body.role;
+                                    success1.role = req.body.role;
 
                                 }
-                                success1[0].save()
+                                success1.save()
                                     .then(result1 => {
                                         res.status(200).json({
                                             success: 'true',
-                                            message: 'Task successfully updated'
+                                            message: 'User successfully updated'
                                         })
                                         return 1;
                                     })
