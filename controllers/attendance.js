@@ -89,7 +89,6 @@ exports.getAllAttendance = (req, res, next) => {
 
 
 
-
 exports.getAttendanceById = (req, res, next) => {
     const adminId = req.userId;
     const id = req.params.userId;
@@ -134,7 +133,7 @@ exports.getAttendanceById = (req, res, next) => {
             } else {
                 if (success.role == 'admin') {
                     //console.log('yes', success.role);
-                    Users.findById(id)
+                    Users.find({employeeId: id})
                         .then(myUser => {
                             if (myUser == null || myUser.length < 1) {
                                 return res.status(404).json({
@@ -202,6 +201,7 @@ exports.getAttendanceById = (req, res, next) => {
 exports.markAttendance = (req, res, next) => {
     const id = req.userId;
     const employeeId = req.employeeId;
+	
     var d = new Date();
     var a = d.getFullYear();
     var b = d.getMonth();
@@ -220,6 +220,7 @@ exports.markAttendance = (req, res, next) => {
 
     let today1 = String(new Date(new Date().toDateString()));
     //console.log('today1: ', today1);
+
 
     var x1 = new Date();
     var x2 = x1.getTime();
@@ -253,15 +254,13 @@ exports.markAttendance = (req, res, next) => {
                 Attendance.findOne({ _user: employeeId, date: { $gte: qw } })
                     .exec()
                     .then(success => {
-
-
                         if (success == null || success.length < 1) {
                             const attend = new Attendance();
 
                             attend._id = new mongoose.Types.ObjectId(),
                                 attend.present = true,
                                 attend.date = x2,
-                                attend._user = id;
+                                attend._user = employeeId;
 
                             attend.save()
                                 .then(result => {
