@@ -51,8 +51,8 @@ exports.getRecord = (req, res, next) => {
                     Leaves.find({ status: 'pending' })
                         .then(result => {
                             if (result == null || result.length < 1) {
-                                return res.status(200).json({
-                                    success: 'true',
+                                return res.status(404).json({
+                                    success: 'false',
                                     message: 'No Leave request found!'
                                 })
                             } else {

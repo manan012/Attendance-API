@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
     },
     employeeId: {
         type: String,
+        unique: true,
         required: true,
     },
     phone: {

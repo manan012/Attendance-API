@@ -16,9 +16,12 @@ router.post('/register', userAuth, sign.register);
 router.post('/login', sign.login);
 router.post('/attendance', userAuth, attendance.markAttendance);
 router.put('/reset', sign.reset);
-router.put('/edit/:employeeId', userAuth, sign.editUser);
-router.delete('/delete/:employeeId', userAuth, sign.deleteUser);
-router.get('/user', userAuth, sign.getUser);
+router.put('/edit/:userId', userAuth, sign.editUser);
+router.delete('/delete/:userId', userAuth, sign.deleteUser);
+router.get('/user/all', userAuth, sign.getAllUser);
+router.get('/user', userAuth, sign.getDetails);
+router.get('/user/:userId', userAuth, sign.getUser);
+
 
 router.get('/attendance/all', userAuth, attendance.getAllAttendance);
 router.get('/attendance/:userId', userAuth, attendance.getAttendanceById);
