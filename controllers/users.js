@@ -121,7 +121,8 @@ exports.deleteUser = (req, res, next) => {
                                 })
                                 return 1;
                             } else {
-                                Users.findByIdAndDelete(success1[0]._id)
+				console.log(success1);
+                                Users.findByIdAndDelete(success1._id)
                                     .then(result1 => {
                                         res.status(200).json({
                                             success: 'true',
