@@ -27,7 +27,7 @@ exports.createProject = (req, res, next) => {
                 }
 
                 if (req.body.member != null) {
-                    task._members = req.body.member;
+                    project._members = req.body.member;
                 }
 
                 project.save()
@@ -48,7 +48,8 @@ exports.createProject = (req, res, next) => {
                     });
             }
         })
-        .catch(err => {
+        .catch(error => {
+            console.log(error)
             return res.status(500).json({
                 success: "false",
                 message: "Some error occurred"
@@ -73,7 +74,7 @@ exports.editProject = (req, res, next) => {
                 })
             } else {
 
-                Projects.find({_id:projectId, createdBy:userId})
+                Projects.find({ _id: projectId, createdBy: userId })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
@@ -138,7 +139,7 @@ exports.deleteProject = (req, res, next) => {
                 })
             } else {
 
-                Projects.find({_id:projectId, createdBy: userId})
+                Projects.find({ _id: projectId, createdBy: userId })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
@@ -271,7 +272,7 @@ exports.getProject = (req, res, next) => {
 
 }
 
-exports.getModules = (req,res,next) => {
+exports.getModules = (req, res, next) => {
     const userId = req.userId;
     const employeeId = req.employeeId;
     const projectId = req.params.projectId;
@@ -283,22 +284,22 @@ exports.getModules = (req,res,next) => {
                     message: 'User Not found'
                 })
             } else {
-                Projects.find({_members: employeeId, _id: projectId },{_modules:true})
-                .then(result => {
-                    if (result == null || result.length < 1) {
-                        return res.status(404).json({
-                            success: 'false',
-                            message: 'Project not found'
-                        })
-                    } else {
-                        return res.status(200).json({
-                            success: 'true',
-                            message: 'Project Found',
-                            modules: result
-                        })
+                Projects.find({ _members: employeeId, _id: projectId }, { _modules: true })
+                    .then(result => {
+                        if (result == null || result.length < 1) {
+                            return res.status(404).json({
+                                success: 'false',
+                                message: 'Project not found'
+                            })
+                        } else {
+                            return res.status(200).json({
+                                success: 'true',
+                                message: 'Project Found',
+                                modules: result
+                            })
 
-                    }
-                })
+                        }
+                    })
 
             }
         })
