@@ -107,3 +107,67 @@ exports.getRecord = (req, res, next) => {
             })
         })
 }
+
+exports.editDetails = (req, res, next) => {
+    const adminId = req.userId;
+    const detailId = req.params.detailId;
+    const status = req.body.status;
+    Users.findById(adminId)
+        .then(success => {
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: 'false',
+                    message: 'Admin not found'
+                })
+            } else {
+                if (success.role == 'admin') {
+                    Details.findById(detailId)
+                        .then(result => {
+                            if (result == null || result.length < 1) {
+                                return res.status(404).json({
+                                    success: 'false',
+                                    message: 'Edit Record not found'
+                                })
+                            } else {
+
+                                result.status = status;
+                                result.save()
+                                    .then(result1 => {
+                                        return res.status(200).json({
+                                            success: 'true',
+                                            message: 'Record successfully updated'
+
+                                        })
+                                    })
+                                    .catch(error => {
+                                        return res.status(500).json({
+                                            success: 'false',
+                                            message: 'Some error occurred'
+                                        })
+
+                                    })
+                            }
+                        })
+                        .catch(error1 => {
+                            return res.status(500).json({
+                                success: 'false',
+                                message: 'Some error occurred'
+                            })
+                        })
+
+                } else {
+                    return res.status(401).json({
+                        success: 'false',
+                        message: 'Unauthorized access'
+                    })
+
+                }
+            }
+        })
+        .catch(error2 => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error occurred'
+            })
+        })
+}

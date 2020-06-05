@@ -17,7 +17,7 @@ router.post('/register', userAuth, sign.register);
 router.post('/login', sign.login);
 router.post('/attendance', userAuth, attendance.markAttendance);
 router.put('/reset', sign.reset);
-router.put('/edit/:userId', userAuth, sign.editUser);
+router.put('/edit/:employeeId', userAuth, sign.editUser);
 router.delete('/delete/:userId', userAuth, sign.deleteUser);
 router.get('/user/all', userAuth, sign.getAllUser);
 router.get('/user', userAuth, sign.getDetails);
@@ -59,6 +59,7 @@ router.get('/leave/rejected', userAuth, leave.getMyRecord_rejected);
 router.put('/leave/:leaveId', userAuth, leave.editRecord);
 
 router.post('/editdetail', userAuth, editDetail.addRecord);
+router.put('/editdetail/:detailId', userAuth, editDetail.editDetails);
 router.get('/editdetail', userAuth, editDetail.getRecord);
 
 module.exports = router;

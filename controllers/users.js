@@ -121,7 +121,7 @@ exports.deleteUser = (req, res, next) => {
                                 })
                                 return 1;
                             } else {
-				console.log(success1);
+                                console.log(success1);
                                 Users.findByIdAndDelete(success1._id)
                                     .then(result1 => {
                                         res.status(200).json({
@@ -220,6 +220,7 @@ exports.login = (req, res, next) => {
 exports.editUser = (req, res, next) => {
 
     const adminId = req.userId;
+    const employeeId = req.params.employeeId;
     const userId = req.params.userId;
     Users.findById(adminId)
         .exec()
@@ -232,10 +233,10 @@ exports.editUser = (req, res, next) => {
                 return 1;
             } else {
                 if (success.role == 'admin') {
-                    Users.findById(userId)
+                    Users.find({ employeeId: employeeId })
                         .then(success1 => {
-                            console.log(success1);
-                            if (success1 == null || success1.length < 1) {
+                            console.log(success1[0]);
+                            if (success1 == null || success1[0].length < 1) {
                                 res.status(404).json({
                                     success: 'false',
                                     message: 'User not found'
@@ -243,26 +244,26 @@ exports.editUser = (req, res, next) => {
                                 return 1;
                             } else {
                                 if (req.body.name != null) {
-                                    success1.name = req.body.name;
+                                    success1[0].name = req.body.name;
                                 }
                                 if (req.body.email != null) {
-                                    success1.email = req.body.email;
+                                    success1[0].email = req.body.email;
                                 }
                                 if (req.body.employeeId != null) {
-                                    success1.employeeId = req.body.employeeId;
+                                    success1[0].employeeId = req.body.employeeId;
                                 }
                                 if (req.body.phone != null) {
-                                    success1.phone = req.body.phone;
+                                    success1[0].phone = req.body.phone;
 
                                 }
                                 if (req.body.category != null) {
-                                    success1.category = req.body.category;
+                                    success1[0].category = req.body.category;
                                 }
                                 if (req.body.role != null) {
-                                    success1.role = req.body.role;
+                                    success1[0].role = req.body.role;
 
                                 }
-                                success1.save()
+                                success1[0].save()
                                     .then(result1 => {
                                         res.status(200).json({
                                             success: 'true',
