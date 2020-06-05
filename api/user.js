@@ -9,6 +9,7 @@ const moduler = require('../controllers/module');
 const project = require('../controllers/projects');
 const kanban = require('../controllers/kanban');
 const leave = require('../controllers/leave');
+const editDetail = require('../controllers/editDetail');
 
 const userAuth = require('../middleware/userAuth');
 
@@ -57,7 +58,7 @@ router.get('/leave/approved', userAuth, leave.getMyRecord_approved);
 router.get('/leave/rejected', userAuth, leave.getMyRecord_rejected);
 router.put('/leave/:leaveId', userAuth, leave.editRecord);
 
-
-
+router.post('/editdetail', userAuth, editDetail.addRecord);
+router.get('/editdetail', userAuth, editDetail.getRecord);
 
 module.exports = router;

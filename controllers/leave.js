@@ -35,6 +35,12 @@ exports.addRecord = (req, res, next) => {
                     })
             }
         })
+        .catch(err => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error occurred'
+            })
+        })
 }
 
 exports.getRecord = (req, res, next) => {
