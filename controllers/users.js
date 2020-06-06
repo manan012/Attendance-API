@@ -311,59 +311,66 @@ exports.editUser = (req, res, next) => {
 
 exports.reset = (req, res, next) => {
     const newPassword = req.body.newPassword;
+    const password = req.body.password;
     Users.find({ email: req.body.email })
         .exec()
         .then(user => {
             if (user.length < 1) {
-                res.status(404).json({
+                return res.status(404).json({
                     success: 'false',
                     message: 'User not found'
                 })
-                return 1;
+
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                if (err) {
 
-                    res.status(401).json({
+
+                if (err) {
+                    return res.status(401).json({
                         success: 'false',
                         message: 'Auth failed'
                     });
-                    return 1;
+
                 }
                 if (result) {
-                    bcrypt.hash(req.body.newPassword, 10, (err, hash) => {
-                        if (err) {
-                            res.status(500).json({
+                    bcrypt.hash(req.body.newPassword, 10, (error, hash) => {
+
+                        if (error) {
+
+                            return res.status(500).json({
                                 success: 'false',
                                 message: 'Some error occurred'
                             })
-                            return 1;
+
                         } else {
+
                             user[0].password = hash;
                             user[0].save()
                                 .then(resetSuccess => {
-                                    res.status(200).json({
+                                    //console.log('hiiiiiiiiiiiiiiiiiiiii');
+                                    return res.status(200).json({
                                         success: 'true',
                                         message: 'Password changed successfully'
                                     })
-                                    return 1;
+
                                 })
                                 .catch(error12 => {
-                                    res.status(500).json({
+                                    return res.status(500).json({
                                         success: 'false',
                                         message: 'Error in resetting the password'
                                     })
-                                    return 1;
+
                                 })
 
                         }
                     })
+                } else {
+                    return res.status(401).json({
+                        success: 'false',
+                        message: 'Auth failed'
+                    });
                 }
-                res.status(401).json({
-                    success: 'false',
-                    message: 'Auth failed'
-                });
-                return 1;
+
             })
 
         })
