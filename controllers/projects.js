@@ -20,7 +20,7 @@ exports.createProject = (req, res, next) => {
 
                 const project = new Projects();
                 project._id = new mongoose.Types.ObjectId(),
-                    project.name = req.body.name;
+                project.name = req.body.name;
                 project.createdBy = userId;
                 if (req.body.module != null) {
                     project._modules = req.body.module;
@@ -76,6 +76,7 @@ exports.editProject = (req, res, next) => {
 
                 Projects.find({ _id: projectId, createdBy: userId })
                     .then(result => {
+			console.log(result);
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
                                 success: 'false',
@@ -84,16 +85,16 @@ exports.editProject = (req, res, next) => {
                         } else {
 
                             if (req.body.name != null) {
-                                result.name = req.body.name;
+                                result[0].name = req.body.name;
                             }
                             if (req.body.module != null) {
-                                result._modules = req.body.module;
+                                result[0]._modules = req.body.module;
                             }
                             if (req.body.member != null) {
-                                result._members = req.body.member;
+                                result[0]._members = req.body.member;
                             }
 
-                            result.save()
+                            result[0].save()
                                 .then(result1 => {
                                     return res.status(200).json({
                                         success: 'true',
@@ -101,6 +102,7 @@ exports.editProject = (req, res, next) => {
                                     })
                                 })
                                 .catch(error1 => {
+					
                                     return res.status(500).json({
                                         success: 'false',
                                         message: 'Some error occurred'
@@ -110,6 +112,7 @@ exports.editProject = (req, res, next) => {
 
                     })
                     .catch(err => {
+			console.log(err);
                         return res.status(500).json({
                             success: 'false',
                             message: 'Some error occurred'
@@ -117,7 +120,7 @@ exports.editProject = (req, res, next) => {
                     })
             }
         })
-        .catch(err => {
+        .catch(err11 => {
             return res.status(500).json({
                 success: 'false',
                 message: 'Some error occurred'

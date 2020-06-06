@@ -23,9 +23,6 @@ exports.createModule = (req, res, next) => {
                     if (req.body.task != null) {
                         module._task = req.body.task;
                     }
-                    if (req.body.project != null) {
-                        module._project = req.body.project;
-                    }
                     if (req.body.member != null) {
                         module._member = req.body.member;
                     }
@@ -79,6 +76,7 @@ exports.editModule = (req, res, next) => {
                 if (success.role == 'admin') {
                     Modules.findById(moduleId)
                         .then(result => {
+				
                             if (result == null || result.length < 1) {
                                 return res.status(404).json({
                                     success: 'false',
@@ -91,11 +89,8 @@ exports.editModule = (req, res, next) => {
                                 if (req.body.task != null) {
                                     result._task = req.body.task;
                                 }
-                                if (req.body.project != null) {
-                                    result._project = req.body.project;
-                                }
                                 if (req.body.member != null) {
-                                    module._member = req.body.member;
+                                    result._member = req.body.member;
                                 }
 
                                 result.save()
@@ -208,7 +203,7 @@ exports.getTasks = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Modules.find({ _member: employeeId, _id: moduleId },{_task:true})
+                Modules.find({ _member: employeeId, _id: moduleId }, { _task: true })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
@@ -220,6 +215,55 @@ exports.getTasks = (req, res, next) => {
                                 success: 'true',
                                 message: 'Module Found',
                                 tasks: result
+                            })
+
+                        }
+                    })
+                    .catch(err => {
+                        return res.status(500).json({
+                            success: 'false',
+                            message: 'Some error occurred'
+                        })
+                    })
+
+
+            }
+        })
+        .catch(err => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error has occurred'
+            })
+        })
+}
+
+
+
+
+
+exports.getModule = (req, res, next) => {
+    const userId = req.userId;
+    const employeeId = req.employeeId;
+    Users.findById(userId)
+        .then(success => {
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: "false",
+                    message: 'User Not found'
+                })
+            } else {
+                Modules.find({ _member: employeeId},{name: true, _task: true})
+                    .then(result => {
+                        if (result == null || result.length < 1) {
+                            return res.status(404).json({
+                                success: 'false',
+                                message: 'Module not found'
+                            })
+                        } else {
+                            return res.status(200).json({
+                                success: 'true',
+                                message: 'Module Found',
+                                module: result
                             })
 
                         }

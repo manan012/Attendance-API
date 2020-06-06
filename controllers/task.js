@@ -211,6 +211,7 @@ exports.getTask = (req, res, next) => {
             } else {
                 Tasks.find({ _user: employeeId }, { title: true, description: true })
                     .then(result => {
+			console.log(result);
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
                                 success: 'false',

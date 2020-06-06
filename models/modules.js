@@ -8,10 +8,11 @@ const moduleSchema = mongoose.Schema({
     },
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     _task: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: Task
     }],
     _member: [{

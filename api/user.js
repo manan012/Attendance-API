@@ -36,6 +36,7 @@ router.post('/module', userAuth, moduler.createModule);
 router.put('/module/:moduleId', userAuth, moduler.editModule);
 router.delete('/module/:moduleId', userAuth, moduler.deleteModule);
 router.get('/task/:moduleId', userAuth, moduler.getTasks);
+router.get('/modules', userAuth, moduler.getModule);
 
 
 router.post('/project', userAuth, project.createProject);

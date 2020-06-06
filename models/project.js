@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('./user');
 const Module = require('./modules');
+
 const projectSchema = mongoose.Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +16,7 @@ const projectSchema = mongoose.Schema({
         ref: User,
     },
     _modules: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: Module,
     }],
     _members: [{
