@@ -43,7 +43,7 @@ exports.getAllTasks = (req, res, next) => {
 exports.saveTask = (req, res, next) => {
     const tasks = req.body.tasks
     const _user = req.body._user
-    const adminId = req.userid;
+    const adminId = req.userId;
     //Delete from database if task not in tasks
     //Also delete any attachments not present
     User.findById(adminId)
@@ -241,7 +241,9 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-exports.saveFiles = upload.array('attachments', 10), (req, res) => {
+exports.uploadFiles = upload.array('attachments', 10)
+
+exports.saveFiles = (req, res) => {
     const id = req.body.id
     const _user = req.body._user
     const files = req.body.files

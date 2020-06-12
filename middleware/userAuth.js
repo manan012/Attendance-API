@@ -29,7 +29,7 @@ module.exports = (req, res, next) => {
             message: 'Not authenticated'
         })
     }
-    //console.log(decodedtoken);
+    // console.log(decodedtoken);
     req.userId = decodedtoken.userId;
     req.employeeId = decodedtoken.employeeId;
     next();

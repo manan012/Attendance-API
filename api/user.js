@@ -70,6 +70,6 @@ router.get('/tasks/:userId', userAuth, kanban.getAllTasks)
 router.post('/tasks/save', userAuth, kanban.saveTask)
 router.get('/buckets/:userId', userAuth, kanban.getAllBuckets)
 router.post('/buckets/save', userAuth, kanban.saveBucket)
-router.post('/files', userAuth, kanban.saveFiles)
+router.post('/files', userAuth, kanban.uploadFiles, kanban.saveFiles)
 
 module.exports = router;
