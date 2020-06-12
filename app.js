@@ -29,6 +29,9 @@ app.use((req, res, next) => {
 // });
 
 
+//Static folder for uploading files/attachments
+app.use(express.static('uploads'))
+
 app.use('/api', apiroutes);
 
 app.get("/", (req, res) => { res.send("Here") })

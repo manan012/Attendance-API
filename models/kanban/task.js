@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 const User = require('../user')
 
 const taskSchema = mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-    },
     id: {
         type: Number
     },
