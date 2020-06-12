@@ -7,10 +7,10 @@ const fs = require('fs')
 
 //Task controllers
 exports.getAllTasks = (req, res, next) => {
-    const _user = req.params.userId;
-    const userId = req.userId;
+    //const _user = req.params.userId;
+    const _user = req.userId;
     var dataToSend = {}
-    User.findById(userId)
+    User.findById(_user)
         .then(success => {
             if (success == null || success.length < 1) {
                 return res.status(404).json({
@@ -132,7 +132,6 @@ exports.saveTask = (req, res, next) => {
 
 //Buckets controllers
 exports.getAllBuckets = (req, res, next) => {
-    const userId = req.params.userId;
     const _userId = req.userId;
     User.findById(_userId)
         .then(success => {
@@ -142,7 +141,7 @@ exports.getAllBuckets = (req, res, next) => {
                     message: 'user not found'
                 })
             } else {
-                Bucket.find({ _user: req.params.userId }, { _id: 0, __v: 0 }, { sort: { rank: 1 } }, (err, docs) => {
+                Bucket.find({ _user: _userId }, { _id: 0, __v: 0 }, { sort: { rank: 1 } }, (err, docs) => {
                     if (!err) {
                         res.json(docs)
                     } else {

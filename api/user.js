@@ -66,9 +66,9 @@ router.put('/editdetail/:detailId', userAuth, editDetail.editDetails);
 router.get('/editdetail', userAuth, editDetail.getRecord);
 
 //Added by Siddeshwar 
-router.get('/tasks/:userId', userAuth, kanban.getAllTasks)
+router.get('/tasks', userAuth, kanban.getAllTasks)
 router.post('/tasks/save', userAuth, kanban.saveTask)
-router.get('/buckets/:userId', userAuth, kanban.getAllBuckets)
+router.get('/buckets', userAuth, kanban.getAllBuckets)
 router.post('/buckets/save', userAuth, kanban.saveBucket)
 router.post('/files', userAuth, kanban.saveFiles)
 
