@@ -31,12 +31,14 @@ app.use((req, res, next) => {
 
 app.use('/api', apiroutes);
 
-mongoose.connect(
-    'mongodb+srv://admin-hrms:' + 'BUTTONS007' + '@cluster0-kldnh.mongodb.net/HRMS?retryWrites=true&w=majority',{
-         useNewUrlParser: true, useUnifiedTopology: true 
-    }
-)
-.then(console.log('hello'))
-.catch(err => console.log(err))
+app.get("/", (req, res) => { res.send("Here") })
 
-app.listen(process.env.PORT || 3000);
+mongoose.connect(
+    'mongodb+srv://admin-hrms:' + 'BUTTONS007' + '@cluster0-kldnh.mongodb.net/HRMS?retryWrites=true&w=majority', {
+    useNewUrlParser: true, useUnifiedTopology: true
+}
+)
+    .then(console.log('hello'))
+    .catch(err => console.log(err))
+
+app.listen(process.env.PORT || 3001);

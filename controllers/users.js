@@ -188,7 +188,7 @@ exports.login = (req, res, next) => {
                     const token = jwt.sign({
                         employeeId: user[0].employeeId,
                         userId: user[0]._id,
-			role: user[0].role
+                        role: user[0].role
                     }, 'secretkey', {
                         expiresIn: "1h"
                     });

@@ -7,9 +7,11 @@ const task = require('../controllers/task');
 const attendance = require('../controllers/attendance');
 const moduler = require('../controllers/module');
 const project = require('../controllers/projects');
-const kanban = require('../controllers/kanban');
+//const kanban = require('../controllers/kanban');
 const leave = require('../controllers/leave');
 const editDetail = require('../controllers/editDetail');
+
+const kanban = require('../controllers/kanban/kanban')
 
 const userAuth = require('../middleware/userAuth');
 
@@ -47,10 +49,10 @@ router.get('/project/:projectId', userAuth, project.getProject);
 router.get('/module/:projectId', userAuth, project.getModules);
 
 
-router.post('/board', userAuth, kanban.createKanban);
-router.put('/board/:boardId', userAuth, kanban.editKanban);
-router.delete('/board/:boardId', userAuth, kanban.deleteKanban);
-router.get('/board', userAuth, kanban.getKanban);
+// router.post('/board', userAuth, kanban.createKanban);
+// router.put('/board/:boardId', userAuth, kanban.editKanban);
+// router.delete('/board/:boardId', userAuth, kanban.deleteKanban);
+// router.get('/board', userAuth, kanban.getKanban);
 
 router.post('/leave', userAuth, leave.addRecord);
 router.get('/leave/all', userAuth, leave.getRecord);
@@ -62,5 +64,12 @@ router.put('/leave/:leaveId', userAuth, leave.editRecord);
 router.post('/editdetail', userAuth, editDetail.addRecord);
 router.put('/editdetail/:detailId', userAuth, editDetail.editDetails);
 router.get('/editdetail', userAuth, editDetail.getRecord);
+
+//Added by Siddeshwar 
+router.get('/tasks/:userId', kanban.getAllTasks)
+router.post('/tasks/save', kanban.saveTask)
+router.get('/buckets/:userId', kanban.getAllBuckets)
+router.post('/buckets/save', kanban.saveBucket)
+router.post('/files', kanban.saveFiles)
 
 module.exports = router;
