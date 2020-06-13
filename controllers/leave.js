@@ -21,6 +21,7 @@ exports.addRecord = (req, res, next) => {
                 const leave = new Leaves();
                 leave._id = new mongoose.Types.ObjectId(),
                     leave.employeeId = employeeId;
+                leave.name = success.name;
                 leave.description = req.body.description;
                 leave.date = dateIndia.toLocaleString();
                 leave.dateTo = dateTo;
