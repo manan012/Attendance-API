@@ -129,6 +129,35 @@ exports.editDetails = (req, res, next) => {
                                     message: 'Edit Record not found'
                                 })
                             } else {
+                                if (status === "approved") {
+                                    Users.find({ employeeId: result.employeeId })
+                                        .then(detail => {
+                                            if (detail == null || detail[0].length < 1) {
+                                                return res.status(404).json({
+                                                    success: 'false',
+                                                    message: 'User not found'
+                                                })
+                                            } else {
+                                                if (req.body.name != null) {
+                                                    detail[0].name = req.body.name;
+                                                }
+                                                if (req.body.role != null) {
+                                                    detail[0].role = req.body.role;
+                                                }
+                                                if (req.body.email != null) {
+                                                    detail[0].email = req.body.email;
+                                                }
+                                                if (req.body.phone != null) {
+                                                    detail[0].phone = req.body.phone;
+                                                }
+                                                if (req.body.category != null) {
+                                                    detail[0].category = req.body.category;
+                                                }
+                                                detail[0].save()
+                                            }
+                                        })
+
+                                }
 
                                 result.status = status;
                                 result.save()
