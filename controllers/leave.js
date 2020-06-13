@@ -144,6 +144,8 @@ exports.editRecord = (req, res, next) => {
                                             }
                                         })
 
+                                } else if (status == "rejected") {
+                                    result.comment = req.body.comment;
                                 }
                                 result.status = status;
                                 result.save()
@@ -289,7 +291,7 @@ exports.getMyRecord_rejected = (req, res, next) => {
                 })
             } else {
 
-                Leaves.find({ employeeId: employeeId, status: 'rejected' })
+                Leaves.find({ employeeId: employeeId, status: 'rejected' }, { comment: true })
                     .then(result => {
                         if (result == null || result.length < 1) {
                             return res.status(404).json({

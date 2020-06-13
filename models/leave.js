@@ -32,6 +32,10 @@ const leaveSchema = mongoose.Schema({
     dateFrom: {
         type: String,
         required: true
+    },
+    comment: {
+        type: String,
+        deafult: ""
     }
 
 }, { timestamps: true });
