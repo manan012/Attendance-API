@@ -14,13 +14,20 @@ const leaveSchema = mongoose.Schema({
     },
     date: {
         type: String,
-        default: Date,
         required: true
     },
     status: {
         type: String,
         required: true,
         default: 'pending'
+    },
+    dateTo: {
+        type: String,
+        required: true
+    },
+    dateFrom: {
+        type: String,
+        required: true
     }
 
 }, { timestamps: true });

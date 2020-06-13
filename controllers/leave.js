@@ -2,10 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Users = require('../models/user');
 const Leaves = require('../models/leave');
+const moment = require('moment-timezone');
+const dateIndia = moment.tz(Date.now(), "Asia/Kolkata");
 
 exports.addRecord = (req, res, next) => {
     const employeeId = req.employeeId;
     const userId = req.userId;
+    const dateTo = req.body.dateTo;
+    const dateFrom = req.body.dateFrom;
     Users.findById(userId)
         .then(success => {
             if (success == null || success.length < 1) {
@@ -18,6 +22,11 @@ exports.addRecord = (req, res, next) => {
                 leave._id = new mongoose.Types.ObjectId(),
                     leave.employeeId = employeeId;
                 leave.description = req.body.description;
+                leave.date = dateIndia.toLocaleString();
+                leave.dateTo = dateTo;
+                leave.dateFrom = dateFrom;
+                // console.log(dateIndia.toLocaleString());
+
                 leave.save()
                     .then(result => {
                         return res.status(201).json({
