@@ -12,7 +12,7 @@ const leave = require('../controllers/leave');
 const editDetail = require('../controllers/editDetail');
 
 const kanban = require('../controllers/kanban/kanban')
-
+const checkTask = require('../controllers/checkTask');
 const userAuth = require('../middleware/userAuth');
 
 router.post('/register', userAuth, sign.register);
@@ -71,5 +71,9 @@ router.post('/tasks/save', userAuth, kanban.saveTask)
 router.get('/buckets', userAuth, kanban.getAllBuckets)
 router.post('/buckets/save', userAuth, kanban.saveBucket)
 router.post('/files', userAuth, kanban.uploadFiles, kanban.saveFiles)
+
+router.post('/checktask', userAuth, checkTask.addTask);
+router.get('/checktask', userAuth, checkTask.getMyTask);
+router.get('/checktask/all', userAuth, checkTask.getAllTask);
 
 module.exports = router;
