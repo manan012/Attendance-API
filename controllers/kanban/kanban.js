@@ -42,8 +42,8 @@ exports.getAllTasks = (req, res, next) => {
 
 exports.saveTask = (req, res, next) => {
     const tasks = req.body.tasks
-    const _user = req.body._user
     const userId = req.userId;
+    console.log(userId)
     //Delete from database if task not in tasks
     //Also delete any attachments not present
     User.findById(userId)
@@ -55,7 +55,7 @@ exports.saveTask = (req, res, next) => {
                 })
             } else {
 
-                Task.find({ _user: _user }, (err, docs) => {
+                Task.find({ _user: userId }, (err, docs) => {
                     docs.forEach(doc => {
                         var found = false
                         for (var key in tasks) {
@@ -77,7 +77,7 @@ exports.saveTask = (req, res, next) => {
                             }
                         }
                         if (!found) {
-                            Task.deleteOne({ _user: _user, id: doc.id }, (err, docs) => {
+                            Task.deleteOne({ _user: userId, id: doc.id }, (err, docs) => {
                                 if (!err) {
                                     console.log("Deleted task")
                                 } else {
@@ -91,7 +91,7 @@ exports.saveTask = (req, res, next) => {
                 //Insert into database if task in tasks or update if required
                 for (var key in tasks) {
                     var task = tasks[key]
-                    Task.findOneAndUpdate({ _user, _user, id: task.id }, task, { upsert: true }, (err, docs) => {
+                    Task.findOneAndUpdate({ _user: userId, id: task.id }, task, { upsert: true }, (err, docs) => {
                         if (!err) {
                             if (docs) {
                                 docs.toObject()
@@ -110,9 +110,6 @@ exports.saveTask = (req, res, next) => {
                         }
                     })
                 }
-                res.json({ "message": "saved" })
-
-
             }
 
         })
@@ -157,9 +154,7 @@ exports.getAllBuckets = (req, res, next) => {
 }
 exports.saveBucket = (req, res, next) => {
     const buckets = req.body.buckets
-    const _user = req.body._user
     const userId = req.userId;
-    //Delete bucket if database contains a bucket not in buckets
     User.findById(userId)
         .then(success => {
             if (success == null || success.length < 1) {
@@ -168,8 +163,8 @@ exports.saveBucket = (req, res, next) => {
                     message: 'User not found'
                 })
             } else {
-
-                Bucket.find({ _user: _user }, (err, docs) => {
+                //Delete bucket if database contains a bucket not in buckets
+                Bucket.find({ _user: userId }, (err, docs) => {
                     docs.forEach(doc => {
                         var found = false
                         for (var key in buckets) {
@@ -190,6 +185,7 @@ exports.saveBucket = (req, res, next) => {
                         }
                     })
                 })
+                //Insert/Update any changes to the bukcets or any new bucket
                 var rank = 1
                 for (var key in buckets) {
                     // const bucket = { rank: rank, name: buckets[key].name, id: buckets[key].id }
@@ -197,7 +193,7 @@ exports.saveBucket = (req, res, next) => {
 
                     console.log(buckets)
                     rank += 1
-                    Bucket.findOneAndUpdate({ _user: _user, name: bucket.name }, bucket, { upsert: true }, (err, docs) => {
+                    Bucket.findOneAndUpdate({ _user: userId, name: bucket.name }, bucket, { upsert: true }, (err, docs) => {
                         if (!err) {
                             console.log(docs)
                         } else {
