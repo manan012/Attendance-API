@@ -24,6 +24,10 @@ const attendanceSchema = mongoose.Schema({
         ref: User
 
     },
+    name: {
+    	type: String,
+    	ref: User
+    }
 });
 
 module.exports = mongoose.model('Attendance', attendanceSchema);

@@ -258,9 +258,10 @@ exports.markAttendance = (req, res, next) => {
                             const attend = new Attendance();
 
                             attend._id = new mongoose.Types.ObjectId(),
-                                attend.present = true,
-                                attend.date = x2,
+                                attend.present = true;
+                                attend.date = x2;
                                 attend._user = employeeId;
+                                attend.name = result.name;
 
                             attend.save()
                                 .then(result => {
