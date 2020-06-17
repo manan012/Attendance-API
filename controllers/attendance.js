@@ -7,10 +7,12 @@ const url = require('url');
 
 exports.getAllAttendance = (req, res, next) => {
     const adminId = req.userId;
+    const df = req.body.dateFrom;
+    const dt = req.body.dateTo;
 
-    const qwe = url.parse(req.url, true).query;
-    var df = qwe.dateFrom;
-    var dt = qwe.dateTo;
+    //const qwe = url.parse(req.url, true).query;
+    // var df = qwe.dateFrom;
+    // var dt = qwe.dateTo;
     //console.log(df);
     //console.log(new Date(2020, 7, 14));
     //console.log("Less than", lte);
@@ -28,7 +30,7 @@ exports.getAllAttendance = (req, res, next) => {
     dateFrom.setUTCMinutes(0);
     dateFrom.setUTCSeconds(0);
     dateFrom.setUTCMilliseconds(0);
-    //console.log('date from:', dateFrom);
+    console.log('date from:', dateFrom);
 
     var dateTo = new Date();
     dateTo.setFullYear(arr2[0], arr2[1] - 1, arr2[2]);
@@ -36,7 +38,7 @@ exports.getAllAttendance = (req, res, next) => {
     dateTo.setUTCMinutes(0);
     dateTo.setUTCSeconds(0);
     dateTo.setUTCMilliseconds(0);
-    //console.log('date To:', dateTo);
+    console.log('date To:', dateTo);
 
     Users.findById(adminId)
         .then(success => {
@@ -93,9 +95,11 @@ exports.getAttendanceById = (req, res, next) => {
     const adminId = req.userId;
     const id = req.params.userId;
 
-    const qwe = url.parse(req.url, true).query;
-    var df = qwe.dateFrom;
-    var dt = qwe.dateTo;
+    const df = req.body.dateFrom;
+    const dt = req.body.dateTo;
+    //const qwe = url.parse(req.url, true).query;
+    //var df = qwe.dateFrom;
+    //var dt = qwe.dateTo;
     //console.log(df);
     //console.log(new Date(2020, 7, 14));
     //console.log("Less than", lte);
@@ -133,7 +137,7 @@ exports.getAttendanceById = (req, res, next) => {
             } else {
                 if (success.role == 'admin') {
                     //console.log('yes', success.role);
-                    Users.find({employeeId: id})
+                    Users.find({ employeeId: id })
                         .then(myUser => {
                             if (myUser == null || myUser.length < 1) {
                                 return res.status(404).json({
@@ -201,7 +205,7 @@ exports.getAttendanceById = (req, res, next) => {
 exports.markAttendance = (req, res, next) => {
     const id = req.userId;
     const employeeId = req.employeeId;
-	
+
     var d = new Date();
     var a = d.getFullYear();
     var b = d.getMonth();
@@ -259,9 +263,9 @@ exports.markAttendance = (req, res, next) => {
 
                             attend._id = new mongoose.Types.ObjectId(),
                                 attend.present = true;
-                                attend.date = x2;
-                                attend._user = employeeId;
-                                attend.name = result.name;
+                            attend.date = x2;
+                            attend._user = employeeId;
+                            attend.name = result.name;
 
                             attend.save()
                                 .then(result => {
