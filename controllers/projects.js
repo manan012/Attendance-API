@@ -19,11 +19,11 @@ exports.createProject = (req, res, next) => {
             } else {
 
                 const project = new Projects();
-                project._id = new mongoose.Types.ObjectId(),
+                project._id = new mongoose.Types.ObjectId();
                 project.name = req.body.name;
                 project.createdBy = userId;
-                if (req.body.module != null) {
-                    project._modules = req.body.module;
+                if (req.body.task != null) {
+                    project._tasks = req.body.task;
                 }
 
                 if (req.body.member != null) {
@@ -76,7 +76,7 @@ exports.editProject = (req, res, next) => {
 
                 Projects.find({ _id: projectId, createdBy: userId })
                     .then(result => {
-			console.log(result);
+                        console.log(result);
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
                                 success: 'false',
@@ -87,8 +87,8 @@ exports.editProject = (req, res, next) => {
                             if (req.body.name != null) {
                                 result[0].name = req.body.name;
                             }
-                            if (req.body.module != null) {
-                                result[0]._modules = req.body.module;
+                            if (req.body.task != null) {
+                                result[0]._tasks = req.body.task;
                             }
                             if (req.body.member != null) {
                                 result[0]._members = req.body.member;
@@ -102,7 +102,7 @@ exports.editProject = (req, res, next) => {
                                     })
                                 })
                                 .catch(error1 => {
-					
+
                                     return res.status(500).json({
                                         success: 'false',
                                         message: 'Some error occurred'
@@ -112,7 +112,7 @@ exports.editProject = (req, res, next) => {
 
                     })
                     .catch(err => {
-			console.log(err);
+                        console.log(err);
                         return res.status(500).json({
                             success: 'false',
                             message: 'Some error occurred'
@@ -228,6 +228,59 @@ exports.getAllProject = (req, res, next) => {
 
 }
 
+exports.getProjectsAdmin = (req, res, next) => {
+    const userId = req.userId;
+    const employeeId = req.employeeId;
+    Users.findById(userId)
+        .then(success => {
+            if (success == null || success.length < 1) {
+                return res.status(404).json({
+                    success: "false",
+                    message: 'User Not found'
+                })
+            } else {
+                if (success.role == 'admin') {
+                    Projects.find({})
+                        .then(result => {
+                            if (result == null || result.length < 1) {
+                                return res.status(404).json({
+                                    success: 'false',
+                                    message: 'Project not found'
+                                })
+                            } else {
+                                return res.status(200).json({
+                                    success: 'true',
+                                    message: 'Projects Found',
+                                    project: result
+                                })
+
+                            }
+                        })
+                        .catch(err => {
+                            return res.status(500).json({
+                                success: 'false',
+                                message: 'Some error occurred'
+                            })
+                        })
+
+
+                } else {
+                    return res.status(401).json({
+                        success: 'false',
+                        message: 'unauthorized access'
+                    })
+                }
+
+            }
+        })
+        .catch(err => {
+            return res.status(500).json({
+                success: 'false',
+                message: 'Some error has occurred'
+            })
+        })
+
+}
 
 exports.getProject = (req, res, next) => {
     const userId = req.userId;

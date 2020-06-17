@@ -40,11 +40,14 @@ router.delete('/module/:moduleId', userAuth, moduler.deleteModule);
 router.get('/task/:moduleId', userAuth, moduler.getTasks);
 router.get('/modules', userAuth, moduler.getModule);
 
-
+// Add project
 router.post('/project', userAuth, project.createProject);
 router.put('/project/:projectId', userAuth, project.editProject);
 router.delete('/project/:projectId', userAuth, project.deleteProject);
 router.get('/project/all', userAuth, project.getAllProject);
+router.get('/projects', userAuth, project.getProjectsAdmin);
+
+
 router.get('/project/:projectId', userAuth, project.getProject);
 router.get('/module/:projectId', userAuth, project.getModules);
 

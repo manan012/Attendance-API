@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./user');
-const Module = require('./modules');
+const Task = require('./task');
 
 const projectSchema = mongoose.Schema({
     _id: {
@@ -15,9 +15,9 @@ const projectSchema = mongoose.Schema({
         required: true,
         ref: User,
     },
-    _modules: [{
+    _tasks: [{
         type: String,
-        ref: Module,
+        ref: Task
     }],
     _members: [{
         type: String,
