@@ -7,12 +7,12 @@ const url = require('url');
 
 exports.getAllAttendance = (req, res, next) => {
     const adminId = req.userId;
-    const df = req.body.dateFrom;
-    const dt = req.body.dateTo;
+    // const df = req.body.dateFrom;
+    // const dt = req.body.dateTo;
 
-    //const qwe = url.parse(req.url, true).query;
-    // var df = qwe.dateFrom;
-    // var dt = qwe.dateTo;
+    const qwe = url.parse(req.url, true).query;
+    var df = qwe.dateFrom;
+    var dt = qwe.dateTo;
     //console.log(df);
     //console.log(new Date(2020, 7, 14));
     //console.log("Less than", lte);
@@ -95,11 +95,11 @@ exports.getAttendanceById = (req, res, next) => {
     const adminId = req.userId;
     const id = req.params.userId;
 
-    const df = req.body.dateFrom;
-    const dt = req.body.dateTo;
-    //const qwe = url.parse(req.url, true).query;
-    //var df = qwe.dateFrom;
-    //var dt = qwe.dateTo;
+    // const df = req.body.dateFrom;
+    // const dt = req.body.dateTo;
+    const qwe = url.parse(req.url, true).query;
+    var df = qwe.dateFrom;
+    var dt = qwe.dateTo;
     //console.log(df);
     //console.log(new Date(2020, 7, 14));
     //console.log("Less than", lte);
