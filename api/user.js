@@ -45,7 +45,7 @@ router.post('/project', userAuth, project.createProject);
 router.put('/project/:projectId', userAuth, project.editProject);
 router.delete('/project/:projectId', userAuth, project.deleteProject);
 router.get('/project/all', userAuth, project.getAllProject);
-router.get('/projects', userAuth, project.getProjectsAdmin);
+router.get('/projects/:employeeId', userAuth, project.getProjectsAdmin);
 
 
 router.get('/project/:projectId', userAuth, project.getProject);

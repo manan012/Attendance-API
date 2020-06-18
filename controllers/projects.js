@@ -230,7 +230,8 @@ exports.getAllProject = (req, res, next) => {
 
 exports.getProjectsAdmin = (req, res, next) => {
     const userId = req.userId;
-    const employeeId = req.employeeId;
+    const employeeId = req.params.employeeId;
+
     Users.findById(userId)
         .then(success => {
             if (success == null || success.length < 1) {
@@ -240,7 +241,7 @@ exports.getProjectsAdmin = (req, res, next) => {
                 })
             } else {
                 if (success.role == 'admin') {
-                    Projects.find({})
+                    Projects.find({ _members: employeeId })
                         .then(result => {
                             if (result == null || result.length < 1) {
                                 return res.status(404).json({
