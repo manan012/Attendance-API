@@ -14,9 +14,18 @@ const taskSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    projectId: {
+        type: String,
+        required: true
+    },
     _user: {
         type: String,
         ref: User
+    },
+    status: {
+        type: String,
+        required: true,
+        default: 'todo'
     }
 }, { timestamps: true });
 

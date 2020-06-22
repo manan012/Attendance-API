@@ -18,8 +18,9 @@ exports.generateTask = (req, res, next) => {
             } else {
                 if (success.role == 'admin') {
                     const task = new Tasks();
-                    task._id = new mongoose.Types.ObjectId(),
-                        task.title = req.body.title;
+                    task._id = new mongoose.Types.ObjectId();
+                    task.title = req.body.title;
+                    task.projectId = req.body.project;
                     task.description = req.body.description;
                     if (req.body.user != null) {
                         task._user = req.body.user;
@@ -201,6 +202,8 @@ exports.getTask = (req, res, next) => {
 
     const userId = req.userId;
     const employeeId = req.employeeId;
+    const qwe = url.parse(req.url, true).query;
+    var projectId = qwe.dateFrom;
     Users.findById(userId)
         .then(success => {
             if (success == null || success.length < 1) {
@@ -209,9 +212,9 @@ exports.getTask = (req, res, next) => {
                     message: 'User Not found'
                 })
             } else {
-                Tasks.find({ _user: employeeId }, { title: true, description: true })
+                Tasks.find({ _user: employeeId, projectId: projectId }, { title: true, description: true })
                     .then(result => {
-			console.log(result);
+                        console.log(result);
                         if (result == null || result.length < 1) {
                             return res.status(404).json({
                                 success: 'false',
