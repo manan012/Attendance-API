@@ -76,12 +76,12 @@ exports.editBucket = async(req, res) => {
 /*
 {
     bucket1:{
-        rank: 1,
+        rank: something number
         _id: something
     },
 
     bucket2:{
-        rank: 1,
+        rank: something number
         _id: something
     }
 }

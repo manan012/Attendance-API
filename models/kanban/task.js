@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
-const User = require('../user')
-const Project = require('../project');
-const Bucket = require('./bucket');
+
 var taskSchema = mongoose.Schema({
     projectId: {
         type: mongoose.Types.ObjectId,
-        ref: Project
+        ref: 'project'
     },
     name: {
         type: String,
@@ -20,7 +18,7 @@ var taskSchema = mongoose.Schema({
     },
     bucket: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Bucket,
+        ref: 'bucket',
     },
     checklist: [Object],
     start_date: {

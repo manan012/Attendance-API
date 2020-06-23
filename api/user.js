@@ -11,10 +11,11 @@ const project = require('../controllers/projects');
 const leave = require('../controllers/leave');
 const editDetail = require('../controllers/editDetail');
 
-const kanban = require('../controllers/kanban/kanban')
+// const kanban = require('../controllers/kanban/kanban')
 const checkTask = require('../controllers/checkTask');
 const userAuth = require('../middleware/userAuth');
 const bucket = require('../controllers/kanban/buckets');
+const tasks = require('../controllers/kanban/task');
 
 router.post('/register', userAuth, sign.register);
 router.post('/login', sign.login);
@@ -70,11 +71,11 @@ router.put('/editdetail/:detailId', userAuth, editDetail.editDetails);
 router.get('/editdetail', userAuth, editDetail.getRecord);
 
 //Added by Siddeshwar 
-router.get('/tasks', userAuth, kanban.getAllTasks)
-router.post('/tasks/save', userAuth, kanban.saveTask)
-router.get('/buckets', userAuth, kanban.getAllBuckets)
-router.post('/buckets/save', userAuth, kanban.saveBucket)
-router.post('/files', userAuth, kanban.uploadFiles, kanban.saveFiles)
+// router.get('/tasks', userAuth, kanban.getAllTasks)
+// router.post('/tasks/save', userAuth, kanban.saveTask)
+// router.get('/buckets', userAuth, kanban.getAllBuckets)
+// router.post('/buckets/save', userAuth, kanban.saveBucket)
+// router.post('/files', userAuth, kanban.uploadFiles, kanban.saveFiles)
 
 router.post('/checktask', userAuth, checkTask.addTask);
 router.get('/checktask', userAuth, checkTask.getMyTask);
@@ -86,4 +87,11 @@ router.get('/bucket/:projectId', userAuth, bucket.getBucket);
 router.delete('/bucket/delete', userAuth, bucket.deleteBucket);
 router.put('/bucket/edit', userAuth, bucket.editBucket);
 router.put('/bucket/bucketswap', userAuth, bucket.bucketSwap);
+
+router.post('/tasks/add', userAuth, tasks.addTask);
+router.get('/tasks/:projectId', userAuth, tasks.getTask);
+router.put('/tasks/edit', userAuth, tasks.editTask);
+router.delete('/tasks/delete', userAuth, tasks.deleteTask);
+router.put('/tasks/taskswap', userAuth, tasks.taskSwap);
+
 module.exports = router;
