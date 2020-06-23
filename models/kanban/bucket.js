@@ -1,18 +1,16 @@
-const mongoose = require('mongoose');
-const User = require('../user');
-
-const bucketSchema = mongoose.Schema({
+const mongoose = require("mongoose");
+const Project = require("../project");
+var bucketSchema = mongoose.Schema({
     name: {
         type: String,
-        required: "Bucket Name required"
+        required: "Bucket Name required",
     },
     rank: {
-        type: Number
+        type: Number,
     },
-    _user: {
-        type: String,
-        ref: User
-    }
-})
-
-module.exports = mongoose.model('buckets', bucketSchema)
+    projectId: {
+        type: mongoose.Types.ObjectId,
+        ref: Project
+    },
+});
+module.exports = mongoose.model("buckets", bucketSchema);

@@ -14,6 +14,7 @@ const editDetail = require('../controllers/editDetail');
 const kanban = require('../controllers/kanban/kanban')
 const checkTask = require('../controllers/checkTask');
 const userAuth = require('../middleware/userAuth');
+const bucket = require('../controllers/kanban/buckets');
 
 router.post('/register', userAuth, sign.register);
 router.post('/login', sign.login);
@@ -79,4 +80,10 @@ router.post('/checktask', userAuth, checkTask.addTask);
 router.get('/checktask', userAuth, checkTask.getMyTask);
 router.get('/checktask/all', userAuth, checkTask.getAllTask);
 
+router.post('/bucket/add', userAuth, bucket.addBucket);
+router.post('bucket/save', userAuth, bucket.saveBucket);
+router.get('/bucket/:projectId', userAuth, bucket.getBucket);
+router.delete('/bucket/delete', userAuth, bucket.deleteBucket);
+router.put('/bucket/edit', userAuth, bucket.editBucket);
+router.put('/bucket/bucketswap', userAuth, bucket.bucketSwap);
 module.exports = router;

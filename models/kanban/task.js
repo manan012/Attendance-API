@@ -1,48 +1,43 @@
 const mongoose = require('mongoose');
 const User = require('../user')
-
-const taskSchema = mongoose.Schema({
-    id: {
-        type: Number
+const Project = require('../project');
+const Bucket = require('./bucket');
+var taskSchema = mongoose.Schema({
+    projectId: {
+        type: mongoose.Types.ObjectId,
+        ref: Project
     },
     name: {
         type: String,
-        required: true,
     },
     description: {
         type: String,
-        required: true
     },
     assignees: [String],
     rank: {
         type: Number,
-        required: "Rank Required"
+        required: "Rank Required",
     },
     bucket: {
-        type: String,
-        required: "Bucket Name Required"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Bucket,
     },
     checklist: [Object],
     start_date: {
-        type: Date
+        type: Date,
     },
     due_date: {
-        type: Date
+        type: Date,
     },
     progress: {
-        type: String
+        type: String,
     },
     label_color: {
-        type: String
+        type: String,
     },
     priority: {
-        type: String
+        type: String,
     },
     attachments: [String],
-    _user: {
-        type: String,
-        ref: User
-    }
-}, { timestamps: true });
-
-module.exports = mongoose.model('tasks', taskSchema);
+});
+module.exports = mongoose.model("tasks", taskSchema);
