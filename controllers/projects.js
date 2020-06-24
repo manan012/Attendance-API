@@ -36,7 +36,8 @@ exports.createProject = (req, res, next) => {
                         return res.status(201).json({
                             success: "true",
                             message: "Project successfully created",
-                            _id: result._id
+                            _id: result._id,
+                            name: result.name
                         })
                     })
                     .catch(err => {
