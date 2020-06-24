@@ -18,7 +18,7 @@ var taskSchema = mongoose.Schema({
     },
     bucket: {
         type: mongoose.Schema.Types.ObjectId,
-
+	ref: 'bucket'
     },
     checklist: [Object],
     start_date: {
