@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Bucket = require('./bucket');
 var taskSchema = mongoose.Schema({
     projectId: {
         type: mongoose.Types.ObjectId,
@@ -18,7 +18,7 @@ var taskSchema = mongoose.Schema({
     },
     bucket: {
         type: mongoose.Schema.Types.ObjectId,
-	ref: 'bucket'
+	ref: Bucket
     },
     checklist: [Object],
     start_date: {
