@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 var taskSchema = mongoose.Schema({
     projectId: {
         type: mongoose.Types.ObjectId,
-        ref: 'project'
+
     },
     name: {
         type: String,
@@ -18,7 +18,7 @@ var taskSchema = mongoose.Schema({
     },
     bucket: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'bucket',
+
     },
     checklist: [Object],
     start_date: {
